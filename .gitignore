@@ -1,5 +1,13 @@
+# tptp-parser
+tptp-parser-cpp/location.hh
+tptp-parser-cpp/tptp.parser.hh
+tptp-parser-cpp/tptp.lexer.cc
+tptp-parser-cpp/tptp.parser.cc
+tptp-parser-cpp/tptp
+
 # c:
 *.o
+*.output
 
 # python: Byte-compiled / optimized / DLL files
 __pycache__/
@@ -51,8 +59,3 @@ coverage.xml
 
 # docs
 .docs-html/
-
-# generated 
-python3/tptpParser/antlr4/generated/*
-java/*
-cpp/src/tptp6407r3/

@@ -1,0 +1,27 @@
+#############################################################
+#
+# Makefile     : Makefile to build different tptp lexer and parser.
+# Author       : Marco Träger
+# Last Updated : 2019/08
+#
+#############################################################
+
+#CC    = g++ -g
+#LEX   = flex -I
+#BISON = bison -d -y -Wno-yacc --verbose
+CC    = g++ -g
+LEX   = flex -I
+BISON = bison -d -y -Wno-yacc --verbose
+
+all: tptp
+
+tptp: tptp.yy tptp.ll tptp.test.cc tptp.driver.cc
+	$(BISON) -o tptp.parser.cc tptp.yy
+	$(LEX)   -o tptp.lexer.cc tptp.ll
+	$(CC)    -o tptp tptp.test.cc tptp.driver.cc tptp.lexer.cc tptp.parser.cc tptp.ast.cc
+
+clean:      
+	rm -f *.BAK *.o core *~* *.a
+	rm -f stack.hh position.hh location.hh
+	rm -f *.parser.cc *.parser.cc *.lexer.cc *.parser.hh *.out
+	rm -f tptp
