@@ -8,10 +8,12 @@ A TPTP parser written in C++ using the bison/flex parser generator. The parser s
 * bison >= 3.2
 
 ## Generate a tptp-parser
-```$ ./generate-parser.sh ```
-Generate the flex/bison parser (in cpp) for tptp to ```./tptp-parser-cpp/``` from the grammar in ```./tptp-parser-cpp``` using ```flex/bison```.
+```Shell
+$ ./generate-parser.sh
+```
 
-Additionally, builds a test parser executable in ```./tptp-parser-cpp/``` from the cpp sources.
+Generate the parser to ```./tptp-parser-cpp/``` from the grammar defined in ```tptp.ll``` and ```tptp.yy``` using ```flex/bison```. 
+Additionally, builds a test parser executable ```./tptp-parser-cpp/tptp```.
 
 ## Test the tptp-parser c-implementation
 ### run
