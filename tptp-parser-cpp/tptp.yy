@@ -19,15 +19,17 @@
     #include "tptp.ast.hh"
 
     using namespace tptp::ast;
-    class driver;
+    namespace tptp {
+        class parser;
+    }
 }
-%param { driver& drv }
+%param { tptp::parser& drv }
 %locations
 %define parse.trace
 %define parse.error verbose
 %code { 
     #include <iostream>
-    #include "tptp.driver.hh"
+    #include "tptp.parser.hh"
     #include "tptp.ast.hh"
 
     using namespace tptp;

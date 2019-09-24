@@ -68,8 +68,8 @@ public:
     node& add_right(node&&);
 
     // toString
-    virtual std::ostream& print(std::ostream& o) const;
-    friend std::ostream& operator<<(std::ostream& o, const node& n) { return n.print(o); }
+    virtual std::ostream& out(std::ostream& o) const;
+    friend std::ostream& operator<<(std::ostream& o, const node& n) { return n.out(o); }
 
     noderule rule;
     std::string value;

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "tptp.driver.hh"
+#include "tptp.parser.hh"
 
 #include <sys/time.h>
 
@@ -12,14 +12,14 @@ long int getTimeInMs() {
 int main(int argc, char **argv) {
     long int t1 = getTimeInMs();
 
-    driver drv;
+    tptp::parser parser;
     //drv.trace_parsing = true;
     //drv.trace_scanning = true;
 
     std::cout << "# Parsing: " << argv[1] << "\n";
-    drv.parse (argv[1]);
+    parser.parse (argv[1]);
 
-    std::cout << "# Parsed:" << "\n" << drv.ast << "\n";
+    std::cout << "# Parsed:" << "\n" << parser.ast << "\n";
 
     long int t2 = getTimeInMs();
 

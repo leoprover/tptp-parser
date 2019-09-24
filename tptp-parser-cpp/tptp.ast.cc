@@ -5,7 +5,7 @@
 
 using namespace tptp::ast;
 
-std::ostream& node::print(std::ostream& o) const {
+std::ostream& node::out(std::ostream& o) const {
     int size = this->cleft.size() + this->cright.size();
     bool nested = size > 1;
     nested = false;

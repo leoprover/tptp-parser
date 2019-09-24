@@ -6,8 +6,8 @@
 
 #include <cstring> // strerror
 
+#include "tptp.grammar.hh"
 #include "tptp.parser.hh"
-#include "tptp.driver.hh"
 
 #define YY_TXT std::string(yytext, yyleng)
 
@@ -120,7 +120,7 @@
 %%
 
 void
-driver::scan_begin ()
+tptp::parser::scan_begin ()
 {
     yy_flex_debug = trace_scanning;
     if (file.empty () || file == "-")
@@ -133,7 +133,7 @@ driver::scan_begin ()
 }
 
 void
-driver::scan_end ()
+tptp::parser::scan_end ()
 {
     fclose (yyin);
 }
