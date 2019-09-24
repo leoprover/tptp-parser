@@ -4,7 +4,9 @@ tptp-parser-cpp/tptp.parser.hh
 tptp-parser-cpp/tptp.lexer.cc
 tptp-parser-cpp/tptp.parser.cc
 tptp-parser-cpp/tptp
-python3/
+python3/tptp_parser/*
+!python3/tptp_parser/__init__.py
+!python3/tptp_parser/__main__.py
 
 # c:
 *.o

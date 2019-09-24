@@ -1,0 +1,1 @@
+from .tptp_parser import *
