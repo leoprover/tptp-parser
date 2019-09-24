@@ -47,7 +47,7 @@ parse-test: generate-parser tptp.test.cc tptp.parser.cc
 
 swig-python3: generate-parser
 	mkdir -p $(SWIG_PYTHON3)
-	cp *.hh $(SWIG_PYTHON3)/.
+	cp *.hh $(SWIG_PYTHON3).
 	$(SWIG) -python -c++ -o $(SWIG_PYTHON3)/tptp_parser.cc -outdir $(SWIG_PYTHON3) tptp.parser.i
 	( cd $(SWIG_PYTHON3); \
 	  $(CCO) $(SWIG_PYTHON3_INCLUDE_MODULE) tptp_parser.cc; \
