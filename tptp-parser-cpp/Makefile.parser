@@ -25,7 +25,7 @@ SWIG  = swig
 #############################################################
 # SWIG TARGETS
 #############################################################
-SWIG_PYTHON3 = ../python3/tptp-parser/
+SWIG_PYTHON3 = ../python3/tptp_parser/
 SWIG_PYTHON3_INCLUDE_MODULE = -I/usr/include/python3.7m
 
 #############################################################
