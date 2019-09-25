@@ -31,12 +31,6 @@ SWIG_PYTHON3 = $(BIN)python3/tptp_parser/
 SWIG_PYTHON3_INCLUDE_MODULE = -I/usr/include/python3.7m
 
 #############################################################
-# Alternative
-#
-#CC    = g++ -g
-#LEX   = flex -I
-#BISON = bison -d -y -Wno-yacc --verbose
-#############################################################
 
 all: parse-test swig-python3
 

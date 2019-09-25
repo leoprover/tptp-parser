@@ -141,7 +141,8 @@ node& node::__next__() {
     }
     int l = this->cleft.size();
     if(this->iter_index < l) {
-        return this->cleft[this->iter_index++];
+        // cleft is reversed
+        return this->cleft[l - ++this->iter_index];
     }
     return this->cright[this->iter_index++ - l];
 }
