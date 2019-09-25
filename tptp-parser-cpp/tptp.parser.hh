@@ -4,8 +4,6 @@
 # include "tptp.grammar.hh"
 # include "tptp.ast.hh"
 
-using namespace std;
-
 // Give Flex the prototype of yylex we want ...
 # define YY_DECL \
   yy::parser::symbol_type yylex(tptp::parser& drv)
@@ -27,9 +25,9 @@ public:
     bool trace_scanning;
 
     // Run the parser on file F.  Return 0 on success.
-    int parse(const string& f);
+    int parse(const std::string& f);
     // The name of the file being parsed.
-    string file;
+    std::string file;
 
     // Handling the scanner.
     void scan_begin();
@@ -39,7 +37,7 @@ public:
     yy::location location;
 };
 
-tptp::ast::node& parse(const string& f);
+tptp::ast::node& parse(const std::string& f);
 
 } // ! namespace tptp
 #endif // ! DRIVER_HH

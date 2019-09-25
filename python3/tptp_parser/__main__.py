@@ -9,12 +9,12 @@ def main(argv):
     ast = tptp_parser.parse(argv[1])
     time_afterparse = time.time_ns()
     
-    print(ast)
+    print(ast.toString())
 
     time_afterast = time.time_ns()
 
     print('{parse} parse[ms]'.format(
-        parse=int((time_init-time_afterparse)/1000000),
+        parse=int((time_afterparse-time_init)/1000000),
     ))
 
 if __name__ == '__main__':

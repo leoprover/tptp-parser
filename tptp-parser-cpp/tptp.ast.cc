@@ -2,6 +2,7 @@
 #include "tptp.ast.hh"
 #include <vector>
 #include <ostream>
+#include <sstream>
 
 using namespace tptp::ast;
 
@@ -24,6 +25,13 @@ std::ostream& node::out(std::ostream& o) const {
     }
     return o;
 };
+
+std::string node::toString()
+{
+    std::ostringstream oss;
+    this->out(oss);
+    return oss.str();
+}
 
 node::node() {
 }

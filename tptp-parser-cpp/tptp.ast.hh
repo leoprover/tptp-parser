@@ -70,6 +70,7 @@ public:
     // toString
     virtual std::ostream& out(std::ostream& o) const;
     friend std::ostream& operator<<(std::ostream& o, const node& n) { return n.out(o); }
+    std::string toString();
 
     noderule rule;
     std::string value;

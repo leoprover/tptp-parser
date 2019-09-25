@@ -1,7 +1,7 @@
 #include <iostream>
-#include "tptp.parser.hh"
-
 #include <sys/time.h>
+#include "tptp.ast.hh"
+#include "tptp.parser.hh"
 
 long int getTimeInMs() { 
     struct timeval tp;
@@ -12,14 +12,10 @@ long int getTimeInMs() {
 int main(int argc, char **argv) {
     long int t1 = getTimeInMs();
 
-    tptp::parser parser;
-    //drv.trace_parsing = true;
-    //drv.trace_scanning = true;
-
     std::cout << "# Parsing: " << argv[1] << "\n";
-    parser.parse (argv[1]);
+    tptp::ast::node& root = tptp::parse (argv[1]);
 
-    std::cout << "# Parsed:" << "\n" << parser.ast << "\n";
+    std::cout << "# Parsed:" << "\n" << root.toString() << "\n";
 
     long int t2 = getTimeInMs();
 

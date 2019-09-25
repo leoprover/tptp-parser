@@ -19,8 +19,8 @@ tptp::parser::parse (const std::string &f)
     return res;
 }
 
-tptp::ast::node& parse(const string& f) {
-    tptp::parser *prs = (tptp::parser*) malloc(sizeof(tptp::parser));
+tptp::ast::node& tptp::parse(const std::string& f) {
+    tptp::parser* prs = new tptp::parser();
     prs->parse(f);
     return prs->ast;
 }
