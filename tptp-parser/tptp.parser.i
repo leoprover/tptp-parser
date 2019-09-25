@@ -6,8 +6,11 @@
 // * how to setup a well defined multi-target interface (with python2, python3, java, scala)?
 
 %module tptp_parser
-%include "std_string.i"                 // we need std::string support for the file name
+%include "std_string.i"                 // we need std::string support for the file name in
+                                        //   tptp::parse
 %include "exception.i"                  // we need execption support for the python iterator
+                                        //   tptp::ast::node::__iter__ and 
+                                        //   tptp::ast::node::__next__
 
 %{
 #include "tptp.ast.hh"
