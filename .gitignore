@@ -1,9 +1,9 @@
 # tptp-parser
-tptp-parser-cpp/location.hh
-tptp-parser-cpp/tptp.lexer.cc
-tptp-parser-cpp/tptp.grammar.hh
-tptp-parser-cpp/tptp.grammar.cc
-tptp-parser-cpp/tptp
+tptp-parser/location.hh
+tptp-parser/tptp.lexer.cc
+tptp-parser/tptp.grammar.hh
+tptp-parser/tptp.grammar.cc
+tptp-parser/tptp
 python3/tptp_parser/*
 !python3/tptp_parser/__init__.py
 !python3/tptp_parser/__main__.py

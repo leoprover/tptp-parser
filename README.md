@@ -12,12 +12,12 @@ A TPTP parser written in C++ using the bison/flex parser generator. The parser s
 $ ./generate-parser.sh
 ```
 
-Generate the parser to ```./tptp-parser-cpp/``` from the grammar defined in ```tptp.ll``` and ```tptp.yy``` using ```flex/bison```. 
-Additionally, builds a test parser executable ```./tptp-parser-cpp/tptp```.
+Generate the parser to ```./tptp-parser/``` from the grammar defined in ```tptp.ll``` and ```tptp.yy``` using ```flex/bison```. 
+Additionally, builds a test parser executable ```./tptp-parser/tptp```.
 
-## Test the tptp-parser c-implementation
+## Testrun
 ### run
-```$ ./test-cpp-parser.sh ```
+```$ ./test-parser.sh ```
 
 ## License
 The TPTP-parser is licensed under the BSD 3-clause "New" or "Revised" License. See [LICENSE](LICENSE).
