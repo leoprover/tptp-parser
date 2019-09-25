@@ -3,10 +3,10 @@ tptp-parser/location.hh
 tptp-parser/tptp.lexer.cc
 tptp-parser/tptp.grammar.hh
 tptp-parser/tptp.grammar.cc
-tptp-parser/tptp
-python3/tptp_parser/*
-!python3/tptp_parser/__init__.py
-!python3/tptp_parser/__main__.py
+bin/tptp
+bin/python3/tptp_parser/*
+!bin/python3/tptp_parser/__init__.py
+!bin/python3/tptp_parser/__main__.py
 
 # c:
 *.o

@@ -21,11 +21,13 @@ LEX   = flex -I
 BISON = bison -d -y -Wno-yacc --verbose
 # swig
 SWIG  = swig -Wall
+# bin
+BIN   = ../bin/
 
 #############################################################
 # SWIG TARGETS
 #############################################################
-SWIG_PYTHON3 = ../python3/tptp_parser/
+SWIG_PYTHON3 = $(BIN)python3/tptp_parser/
 SWIG_PYTHON3_INCLUDE_MODULE = -I/usr/include/python3.7m
 
 #############################################################
@@ -43,7 +45,7 @@ generate-parser: tptp.yy tptp.ll
 	$(LEX)   -o tptp.lexer.cc tptp.ll
 
 parse-test: generate-parser tptp.test.cc tptp.parser.cc
-	$(CC)    -o tptp *.cc
+	$(CC)    -o $(BIN)tptp *.cc
 
 swig-python3: generate-parser
 	mkdir -p $(SWIG_PYTHON3)
@@ -59,7 +61,7 @@ clean:
 	rm -f *.BAK *.o *.so core *~* *.a
 	rm -f stack.hh position.hh location.hh
 	rm -f *.grammar.cc *.grammar.cc *.lexer.cc *.grammar.hh *.out
-	rm -f tptp
+	rm -f $(BIN)tptp
 	( cd $(SWIG_PYTHON3); \
 	  rm -f tptp_parser.py *.hh *.cc *.o *.so; )
 	
