@@ -10,6 +10,13 @@ def main(argv):
     time_afterparse = time.time_ns()
     
     print(ast.toString())
+    print(ast.child(0).toString())
+    print(ast.child(0).rule)
+    print('')
+    print('')
+    print('')
+    for n in ast:
+        print(n.toString())
 
     time_afterast = time.time_ns()
 

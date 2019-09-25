@@ -35,6 +35,8 @@ enum noderule {
     atomic_word, single_quoted, distinct_object
 };
 
+class StopNodeIterator {};
+
 class node
 {
 public:
@@ -66,6 +68,12 @@ public:
     node& add_left(node&&);
     // add a child as the rightmost child, return the node itself for method-chaining
     node& add_right(node&&);
+    // get child at given index
+    node& child(int);
+
+    // iterator support for python
+    node& __iter__();
+    node& __next__();
 
     // toString
     virtual std::ostream& out(std::ostream& o) const;
@@ -74,12 +82,14 @@ public:
 
     noderule rule;
     std::string value;
+    int numChildren;
 private:
     // For effient child insert O(1), we use two vectors instead of one to store our children. One left- and one right-expanding.
     // Left expanding child vector, used for children inserted left
     std::vector<node> cleft;
     // Right expanding child vector, used for children inserted right
     std::vector<node> cright;
+    int iter_index;
 };
 
 } // ! namespace ast

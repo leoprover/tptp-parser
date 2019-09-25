@@ -18,5 +18,19 @@
 %ignore tptp::ast::node::add_right;
 %ignore tptp::ast::node::out;
 
+// iterator support for python
+%include "exception.i"
+%exception {
+    try
+    {
+        $function
+    }
+    catch (const StopNodeIterator&)
+    {
+        PyErr_SetString(PyExc_StopIteration, "End of iterator");
+        return NULL;
+    }
+}
+
 %include "tptp.ast.hh"
 %include "tptp.parser.hh"
