@@ -1,7 +1,7 @@
 import sys
 import time
 
-from . import tptp_parser
+from tptp_parser import tptp_parser
 
 def main(argv):
     time_init = time.time_ns()
@@ -21,7 +21,7 @@ def main(argv):
     time_afterast = time.time_ns()
 
     print('{parse} parse[ms]'.format(
-        parse=int((time_afterparse-time_init)/1000000),
+        parse=int((time_afterast-time_init)/1000000),
     ))
 
 if __name__ == '__main__':

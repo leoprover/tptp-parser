@@ -34,14 +34,17 @@ std::string node::toString()
 }
 
 node::node() {
+    this->numChildren = 0;
 }
 
 node::node(std::string&& _value) {
     this->value = _value;
+    this->numChildren = 0;
 }
 
 node::node(noderule _rule) {
     this->rule = _rule;
+    this->numChildren = 0;
 }
 node::node(noderule _rule, node&& c1) {
     this->rule = _rule;

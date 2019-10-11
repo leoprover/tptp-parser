@@ -16,8 +16,11 @@ Generate the parser to ```./tptp-parser/``` from the grammar defined in ```tptp.
 Additionally, builds a test parser executable ```./tptp-parser/tptp```.
 
 ## Testrun
-### run
-```$ ./test-parser.sh ```
+### cpp
+```$ ./run-parser.sh PROBLEM_FILE```
+
+### python3
+```$ ./run-parser-python3.sh PROBLEM_FILE```
 
 ## License
 The TPTP-parser is licensed under the BSD 3-clause "New" or "Revised" License. See [LICENSE](LICENSE).
