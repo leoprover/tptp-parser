@@ -1,7 +1,6 @@
 // TPTP parser interface for SWIG interface
 
 // TODO
-// * hide >> operator
 // * change ignore/renames to a white- instead of a black-list
 // * how to setup a well defined multi-target interface (with python2, python3, java, scala)?
 
