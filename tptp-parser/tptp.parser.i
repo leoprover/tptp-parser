@@ -20,13 +20,15 @@
 %ignore yylex;                          // macro for the parser. TODO hide this away inside the package
 %ignore tptp::parser;                   // the parser is accessable using "parse"
 
-%ignore tptp::ast::node::operator=;     // ignoring assignment
-%ignore tptp::ast::node::node;          // ignoring constuctor
-%ignore tptp::ast::node::~node;         // ignoring destructor
-%nodefaultdtor tptp::ast::node;         // don't generate a destructor
-%ignore tptp::ast::node::add_left;      // we're immutable, ignore adding
-%ignore tptp::ast::node::add_right;
-%ignore tptp::ast::node::out;           // no ostream support
+%ignore tptp::ast::node::operator=;         // ignoring assignment
+%ignore tptp::ast::node::node(const node&); // ignore copy constructor s.t. we can import the move constructor
+//%ignore tptp::ast::node::node;          // ignoring constuctor
+//%ignore tptp::ast::node::~node;         // ignoring destructor
+//%nodefaultdtor tptp::ast::node;         // don't generate a destructor
+//%ignore tptp::ast::node::add_left;      // we're immutable, ignore adding
+//%ignore tptp::ast::node::add_right;
+%ignore tptp::ast::node::out;                       // no ostream support    
+%ignore operator<<(std::ostream& o, const node& n); // no ostream support
 
 // iterator support for python
 %exception {
