@@ -41,7 +41,6 @@
     //   -> 
     // $$ = ast::node(ast::IDENTIFIER, $1, $2);
     #define N(t, ...) ast::node(ast::noderule::t __VA_OPT__(,) __VA_ARGS__ )
-    #define S(t) ast::node(t)
 }
 
 // DEVELOPMENT NOTE:
@@ -146,7 +145,7 @@
 
 // Give access to root node
 root 
-: TPTP_file { drv.ast = $1; }
+: TPTP_file { drv.ast = std::move($1); }
 ;
 
 // <TPTP_file>            ::= <TPTP_input>*
@@ -381,7 +380,7 @@ thf_quantification
 // allow an empty list but not "," or ",x" and such
 // equivalent to "thf_variable_list?", "[thf_variable_list]" or "thf_typed_variable*"
 thf_variable_list
-: thf_variable_list__HELPER0 { $$ = $1; }
+: thf_variable_list__HELPER0 { $$ = std::move($1); }
 | %empty                     { $$ = N(thf_variable_list); }
 ;
 thf_variable_list__HELPER0
@@ -1138,7 +1137,7 @@ formula_data
 ;
 
 general_list
-: LBrkt RBrkt               { $$ = N(general_list, $1, S(), $2); }
+: LBrkt RBrkt               { $$ = N(general_list, $1, $2); }
 | LBrkt general_terms RBrkt { $$ = N(general_list, $1, $2, $3); }
 ;
 

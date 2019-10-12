@@ -105,11 +105,14 @@ public:
     std::string toString();
     std::string ruleString();
 
+    bool isTerminal();
+
     noderule rule = noderule::none;
     std::string value;
     int numChildren;
 private:
-    // For effient child insert O(1), we use two vectors instead of one to store our children. One left- and one right-expanding.
+    // For efficient child insert O(1), we use two vectors instead of one to store our children. 
+    // One left- and one right-expanding.
     // Left expanding child vector, used for children inserted left
     std::vector<node> cleft;
     // Right expanding child vector, used for children inserted right

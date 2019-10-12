@@ -24,6 +24,14 @@ def main(argv):
         print(n.toString())
 
     print()
+    print('% tree:')
+    tptp_parser.tree(ast)
+
+    print()
+    print('% filtered tree:')
+    tptp_parser.tree(ast, filter=tptp_parser.noderule_thf_binary_formula)
+
+    print()
     print('% dfs:')
     for n in tptp_parser.dfs(ast):
         print(n.toString(), n.ruleString())

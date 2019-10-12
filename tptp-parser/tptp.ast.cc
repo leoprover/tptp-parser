@@ -123,6 +123,10 @@ node::node(noderule _rule, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5
     this->numChildren = 8;
 }
 
+bool node::isTerminal() {
+    return this->rule == noderule::terminal;
+}
+
 node& node::add_left(node&& c) {
     this->cleft.push_back(c);
     this->numChildren++;
