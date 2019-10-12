@@ -32,13 +32,13 @@ def main(argv):
     tptp_parser.tree(ast, filter=tptp_parser.noderule_thf_binary_formula)
 
     print()
-    print('% dfs:')
-    for n in tptp_parser.dfs(ast):
+    print('% inorder traversal:')
+    for n in tptp_parser.traverse_inorder(ast):
         print(n.toString(), n.ruleString())
 
     print()
-    print('% dfs with filter:')
-    for n in tptp_parser.filter(ast, tptp_parser.noderule_thf_binary_formula):
+    print('% inorder inorder with filter:')
+    for n in tptp_parser.traverse_inorder(ast, filter=tptp_parser.noderule_thf_binary_formula):
         print(n.toString(), n.ruleString())
 
     time_afterast = time.time_ns()

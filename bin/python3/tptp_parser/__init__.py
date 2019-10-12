@@ -1,16 +1,12 @@
 from .tptp_parser import *
 
-def dfs(node):
-    yield node
+def traverse_inorder(node, filter=None):
+    if filter is None or node.rule == filter:
+        yield node
     if node.numChildren > 0:
         for n in node:
-            for nn in dfs(n):
+            for nn in traverse_inorder(n, filter):
                 yield nn
-
-def filter(node, by):
-    for n in dfs(node):
-        if n.rule == by:
-            yield n
 
 def tree(node, depth=0, filter=None):
     if node.rule == filter:
