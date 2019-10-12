@@ -40,7 +40,8 @@
     // $$ = N(IDENTIFIER, $1, $2);
     //   -> 
     // $$ = ast::node(ast::IDENTIFIER, $1, $2);
-    #define N(t, ...) ast::node(t __VA_OPT__(,) __VA_ARGS__ )
+    #define N(t, ...) ast::node(ast::noderule::t __VA_OPT__(,) __VA_ARGS__ )
+    #define S(t) ast::node(t)
 }
 
 // DEVELOPMENT NOTE:
@@ -275,11 +276,11 @@ thf_logic_formula
 // solved by removing "thf_unary_formula" and replacing it with "thf_prefix_unary"
 // 
 //| thf_unary_formula   { $$ = N(thf_logic_formula, $1); }
-: thf_prefix_unary    { $$ = N($1); }
+: thf_prefix_unary    { $$ = N(thf_logic_formula, $1); }
 // @solved shift/reduce conflict
 // removed thf_unitary_formula since its a subrule of our new thf_binary_formula
 //| thf_unitary_formula { $$ = N(thf_logic_formula, $1); }
-| thf_binary_formula  { $$ = N($1); }
+| thf_binary_formula  { $$ = N(thf_logic_formula, $1); }
 // @solved shift/reduce conflict
 // "thf_defined_infix  := .. defined_infix_pred .."
 // "defined_infix_pred := Infix_equality"
@@ -313,7 +314,7 @@ thf_binary_formula
 // <thf_unitary_formula>  ::= <thf_quantified_formula> | <thf_atomic_formula> | 
 //                            <variable> | (<thf_logic_formula>)
 thf_unit_formula
-: thf_unitary_formula { $$ = N($1); }
+: thf_unitary_formula { $$ = N(thf_unit_formula, $1); }
 // @solved shift/reduce conflict
 // "thf_unary_formula  := thf_prefix_unary | thf_infix_unary"
 // "thf_infix_unary    := thf_unitary_term Infix_inequality thf_unitary_term"
@@ -331,10 +332,10 @@ thf_preunit_formula
 ;
 
 thf_unitary_formula
-: thf_quantified_formula { $$ = N($1); }
+: thf_quantified_formula { $$ = N(thf_unitary_formula, $1); }
 // @solved reduce/reduce conflict
 // used thf_unitary_term instead of the following rules since the rules are a subset of thf_unitary_formula
-| thf_unitary_term { $$ = N($1); }
+| thf_unitary_term { $$ = N(thf_unitary_formula, $1); }
 //| thf_atomic_formula { $$ = N(thf_atomic_formula, $1); }
 //| variable { $$ = N(thf_unitary_formula, $1); }
 //| LParen thf_logic_formula RParen { $$ = N(thf_unitary_formula, $1); }
@@ -1015,7 +1016,7 @@ variable
 // <creator_source>       :== creator(<creator_name><optional_info>)
 // <creator_name>         :== <atomic_word>
 source
-: general_term { $$ = N($1); }
+: general_term { $$ = N(source, $1); }
 
 // %----Useful info fields
 // <optional_info>        ::= ,<useful_info> | <null>
@@ -1137,7 +1138,7 @@ formula_data
 ;
 
 general_list
-: LBrkt RBrkt               { $$ = N(general_list, $1, N(), $2); }
+: LBrkt RBrkt               { $$ = N(general_list, $1, S(), $2); }
 | LBrkt general_terms RBrkt { $$ = N(general_list, $1, $2, $3); }
 ;
 

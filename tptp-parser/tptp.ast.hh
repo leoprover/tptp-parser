@@ -3,11 +3,35 @@
 # include <vector>
 # include <ostream> 
 # include <iostream>
+# include <string>
+# include <sstream>
+
+// found at https://stackoverflow.com/a/23404302
+// allowing a simple enum to string conversion
+#define MAKE_ENUM(name, ...) enum class name { __VA_ARGS__, __COUNT}; \
+inline std::ostream& operator<<(std::ostream& os, name value) { \
+std::string enumName = #name; \
+std::string str = #__VA_ARGS__; \
+int len = str.length(); \
+std::vector<std::string> strings; \
+std::ostringstream temp; \
+for(int i = 0; i < len; i ++) { \
+if(isspace(str[i])) continue; \
+        else if(str[i] == ',') { \
+        strings.push_back(temp.str()); \
+        temp.str(std::string());\
+        } \
+        else temp<< str[i]; \
+} \
+strings.push_back(temp.str()); \
+os << strings[static_cast<int>(value)]; \
+return os;} 
 
 namespace tptp {
 namespace ast {
 
-enum noderule {
+MAKE_ENUM(noderule,
+    none, terminal,
     TPTP_file, TPTP_input,
     annotated_formula,
     thf_annotated, tff_annotated, tcf_annotated, fof_annotated, cnf_annotated, tpi_annotated,
@@ -33,7 +57,7 @@ enum noderule {
     name, formula_role, annotations,
     atomic_defined_word, atomic_system_word, number, file_name,
     atomic_word, single_quoted, distinct_object
-};
+);
 
 class StopNodeIterator {};
 
@@ -79,8 +103,9 @@ public:
     virtual std::ostream& out(std::ostream& o) const;
     friend std::ostream& operator<<(std::ostream& o, const node& n) { return n.out(o); }
     std::string toString();
+    std::string ruleString();
 
-    noderule rule;
+    noderule rule = noderule::none;
     std::string value;
     int numChildren;
 private:

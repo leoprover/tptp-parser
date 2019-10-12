@@ -42,6 +42,6 @@
     }
 }
 
-// warning, %includes need to be afer %rename and %ignore or other import modifications
+// warning, %includes need to be afer %rename and %ignore, as well as other import modifications
 %include "tptp.ast.hh"
 %include "tptp.parser.hh"

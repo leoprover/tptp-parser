@@ -33,11 +33,19 @@ std::string node::toString()
     return oss.str();
 }
 
+std::string node::ruleString()
+{
+    std::ostringstream oss;
+    oss << this->rule;
+    return oss.str();
+}
+
 node::node() {
     this->numChildren = 0;
 }
 
 node::node(std::string&& _value) {
+    this->rule = noderule::terminal;
     this->value = _value;
     this->numChildren = 0;
 }
@@ -58,7 +66,7 @@ node::node(noderule _rule, node&& c1, node&& c2) {
     this->numChildren = 2;
 }
 node::node(noderule _rule, node&& c1, node&& c2, node&& c3) {
-    this->rule = rule;
+    this->rule = _rule;
     this->cright.push_back(c1);
     this->cright.push_back(c2);
     this->cright.push_back(c3);
