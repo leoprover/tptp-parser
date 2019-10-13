@@ -1,7 +1,7 @@
 from .tptp_parser import *
 
 def traverse(node, filter=None):
-    if filter is None or node.rule == filter:
+    if filter is None or node.type == filter:
         yield node
     if node.numChildren > 0:
         for n in node:
@@ -10,7 +10,7 @@ def traverse(node, filter=None):
 
 def tree(node, filter=None, prefix=''):
     if filter:
-        if node.rule == filter:
+        if node.type == filter:
             tree(node)    
         for n in node:
             tree(n, filter=filter)
@@ -24,7 +24,7 @@ def tree(node, filter=None, prefix=''):
     if node.isTerminal():
         print(draw_prefix + '"' + str(node) + '"')
     else:
-        print(draw_prefix + node.ruleString())
+        print(draw_prefix + node.typeString())
         
     if node.numChildren > 0:
         for i in range(0,node.numChildren-1):

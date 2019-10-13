@@ -16,7 +16,7 @@ def main(argv):
     print()
     print('% select specific child:')
     print(ast.child(0))
-    print(ast.child(0).ruleString())
+    print(ast.child(0).typeString())
 
     print()
     print('% iterate children:')
@@ -29,17 +29,17 @@ def main(argv):
 
     print()
     print('% filtered tree:')
-    tptp_parser.tree(ast, filter=tptp_parser.noderule_thf_binary_formula)
+    tptp_parser.tree(ast, filter=tptp_parser.nodetype_thf_binary_formula)
 
     print()
     print('% inorder traversal:')
     for n in tptp_parser.traverse(ast):
-        print(n, n.ruleString())
+        print(n, n.typeString())
 
     print()
     print('% inorder inorder with filter:')
-    for n in tptp_parser.traverse(ast, filter=tptp_parser.noderule_thf_binary_formula):
-        print(n, n.ruleString())
+    for n in tptp_parser.traverse(ast, filter=tptp_parser.nodetype_thf_binary_formula):
+        print(n, n.typeString())
 
     time_afterast = time.time_ns()
 

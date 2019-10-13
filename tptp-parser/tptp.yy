@@ -40,7 +40,7 @@
     // $$ = N(IDENTIFIER, $1, $2);
     //   -> 
     // $$ = ast::node(ast::IDENTIFIER, $1, $2);
-    #define N(t, ...) ast::node(ast::noderule::t __VA_OPT__(,) __VA_ARGS__ )
+    #define N(t, ...) ast::node(ast::nodetype::t __VA_OPT__(,) __VA_ARGS__ )
 }
 
 // DEVELOPMENT NOTE:

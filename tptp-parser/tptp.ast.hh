@@ -30,7 +30,7 @@ return os;}
 namespace tptp {
 namespace ast {
 
-MAKE_ENUM(noderule,
+MAKE_ENUM(nodetype,
     none, terminal,
     TPTP_file, TPTP_input,
     annotated_formula,
@@ -77,16 +77,16 @@ public:
     // TODO/REMOVED: does this make problems with std::move? if not, use std::initializer_list<node> implementation again.
     // list initializer, to be able to write
     // node n1 = node(name, {c1, c2, c3})
-    // node(noderule, std::initializer_list<node>);
-    node(noderule);
-    node(noderule, node&&);
-    node(noderule, node&&, node&&);
-    node(noderule, node&&, node&&, node&&);
-    node(noderule, node&&, node&&, node&&, node&&);
-    node(noderule, node&&, node&&, node&&, node&&, node&&);
-    node(noderule, node&&, node&&, node&&, node&&, node&&, node&&);
-    node(noderule, node&&, node&&, node&&, node&&, node&&, node&&, node&&);
-    node(noderule, node&&, node&&, node&&, node&&, node&&, node&&, node&&, node&&);
+    // node(nodetype, std::initializer_list<node>);
+    node(nodetype);
+    node(nodetype, node&&);
+    node(nodetype, node&&, node&&);
+    node(nodetype, node&&, node&&, node&&);
+    node(nodetype, node&&, node&&, node&&, node&&);
+    node(nodetype, node&&, node&&, node&&, node&&, node&&);
+    node(nodetype, node&&, node&&, node&&, node&&, node&&, node&&);
+    node(nodetype, node&&, node&&, node&&, node&&, node&&, node&&, node&&);
+    node(nodetype, node&&, node&&, node&&, node&&, node&&, node&&, node&&, node&&);
 
     // add a child as the leftmost child, return the node itself for method-chaining
     node& add_left(node&&);
@@ -103,11 +103,11 @@ public:
     virtual std::ostream& out(std::ostream& o) const;
     friend std::ostream& operator<<(std::ostream& o, const node& n) { return n.out(o); }
     std::string toString();
-    std::string ruleString();
+    std::string typeString();
 
     bool isTerminal();
 
-    noderule rule = noderule::none;
+    nodetype type = nodetype::none;
     std::string value;
     int numChildren;
 private:

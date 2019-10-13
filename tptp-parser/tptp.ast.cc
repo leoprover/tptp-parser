@@ -33,10 +33,10 @@ std::string node::toString()
     return oss.str();
 }
 
-std::string node::ruleString()
+std::string node::typeString()
 {
     std::ostringstream oss;
-    oss << this->rule;
+    oss << this->type;
     return oss.str();
 }
 
@@ -45,43 +45,43 @@ node::node() {
 }
 
 node::node(std::string&& _value) {
-    this->rule = noderule::terminal;
+    this->type = nodetype::terminal;
     this->value = _value;
     this->numChildren = 0;
 }
 
-node::node(noderule _rule) {
-    this->rule = _rule;
+node::node(nodetype _rule) {
+    this->type = _rule;
     this->numChildren = 0;
 }
-node::node(noderule _rule, node&& c1) {
-    this->rule = _rule;
+node::node(nodetype _rule, node&& c1) {
+    this->type = _rule;
     this->cright.push_back(c1);
     this->numChildren = 1;
 }
-node::node(noderule _rule, node&& c1, node&& c2) {
-    this->rule = _rule;
+node::node(nodetype _rule, node&& c1, node&& c2) {
+    this->type = _rule;
     this->cright.push_back(c1);
     this->cright.push_back(c2);
     this->numChildren = 2;
 }
-node::node(noderule _rule, node&& c1, node&& c2, node&& c3) {
-    this->rule = _rule;
+node::node(nodetype _rule, node&& c1, node&& c2, node&& c3) {
+    this->type = _rule;
     this->cright.push_back(c1);
     this->cright.push_back(c2);
     this->cright.push_back(c3);
     this->numChildren = 3;
 }
-node::node(noderule _rule, node&& c1, node&& c2, node&& c3, node&& c4) {
-    this->rule = _rule;
+node::node(nodetype _rule, node&& c1, node&& c2, node&& c3, node&& c4) {
+    this->type = _rule;
     this->cright.push_back(c1);
     this->cright.push_back(c2);
     this->cright.push_back(c3);
     this->cright.push_back(c4);
     this->numChildren = 4;
 }
-node::node(noderule _rule, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5) {
-    this->rule = _rule;
+node::node(nodetype _rule, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5) {
+    this->type = _rule;
     this->cright.push_back(c1);
     this->cright.push_back(c2);
     this->cright.push_back(c3);
@@ -89,8 +89,8 @@ node::node(noderule _rule, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5
     this->cright.push_back(c5);
     this->numChildren = 5;
 }
-node::node(noderule _rule, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5, node&& c6) {
-    this->rule = _rule;
+node::node(nodetype _rule, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5, node&& c6) {
+    this->type = _rule;
     this->cright.push_back(c1);
     this->cright.push_back(c2);
     this->cright.push_back(c3);
@@ -99,8 +99,8 @@ node::node(noderule _rule, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5
     this->cright.push_back(c6);
     this->numChildren = 6;
 }
-node::node(noderule _rule, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5, node&& c6, node&& c7) {
-    this->rule = _rule;
+node::node(nodetype _rule, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5, node&& c6, node&& c7) {
+    this->type = _rule;
     this->cright.push_back(c1);
     this->cright.push_back(c2);
     this->cright.push_back(c3);
@@ -110,8 +110,8 @@ node::node(noderule _rule, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5
     this->cright.push_back(c7);
     this->numChildren = 7;
 }
-node::node(noderule _rule, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5, node&& c6, node&& c7, node&& c8) {
-    this->rule = _rule;
+node::node(nodetype _rule, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5, node&& c6, node&& c7, node&& c8) {
+    this->type = _rule;
     this->cright.push_back(c1);
     this->cright.push_back(c2);
     this->cright.push_back(c3);
@@ -124,7 +124,7 @@ node::node(noderule _rule, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5
 }
 
 bool node::isTerminal() {
-    return this->rule == noderule::terminal;
+    return this->type == nodetype::terminal;
 }
 
 node& node::add_left(node&& c) {
