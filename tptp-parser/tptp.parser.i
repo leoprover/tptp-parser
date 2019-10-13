@@ -30,6 +30,7 @@
 %ignore operator<<(std::ostream& o, const node& n); // no ostream support
 
 %rename(__str__) tptp::ast::node::toString;
+%rename(__getitem__) tptp::ast::node::child;
 
 // iterator support for python
 %exception {

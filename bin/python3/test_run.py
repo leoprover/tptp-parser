@@ -15,8 +15,8 @@ def main(argv):
 
     print()
     print('% select specific child:')
-    print(ast.child(0))
-    print(ast.child(0).typeString())
+    print(ast[0])
+    print(ast[0].typeString())
 
     print()
     print('% iterate children:')

@@ -28,5 +28,5 @@ def tree(node, filter=None, prefix=''):
         
     if node.numChildren > 0:
         for i in range(0,node.numChildren-1):
-            tree(node.child(i), prefix=prefix+'│')
-        tree(node.child(node.numChildren-1), prefix=prefix+' ')
+            tree(node[i], prefix=prefix+'│')
+        tree(node[node.numChildren-1], prefix=prefix+' ')
