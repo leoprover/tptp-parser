@@ -29,6 +29,8 @@
 %ignore tptp::ast::node::out;                       // no ostream support    
 %ignore operator<<(std::ostream& o, const node& n); // no ostream support
 
+%rename(__str__) tptp::ast::node::toString;
+
 // iterator support for python
 %exception {
     try

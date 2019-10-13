@@ -11,17 +11,17 @@ def main(argv):
     
     # to string
     print('% to string:')
-    print(ast.toString())
+    print(ast)
 
     print()
     print('% select specific child:')
-    print(ast.child(0).toString())
+    print(ast.child(0))
     print(ast.child(0).ruleString())
 
     print()
     print('% iterate children:')
     for n in ast:
-        print(n.toString())
+        print(n)
 
     print()
     print('% tree:')
@@ -33,13 +33,13 @@ def main(argv):
 
     print()
     print('% inorder traversal:')
-    for n in tptp_parser.traverse_inorder(ast):
-        print(n.toString(), n.ruleString())
+    for n in tptp_parser.traverse(ast):
+        print(n, n.ruleString())
 
     print()
     print('% inorder inorder with filter:')
-    for n in tptp_parser.traverse_inorder(ast, filter=tptp_parser.noderule_thf_binary_formula):
-        print(n.toString(), n.ruleString())
+    for n in tptp_parser.traverse(ast, filter=tptp_parser.noderule_thf_binary_formula):
+        print(n, n.ruleString())
 
     time_afterast = time.time_ns()
 

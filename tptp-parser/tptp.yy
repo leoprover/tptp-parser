@@ -468,7 +468,7 @@ thf_let
 
 thf_let_types
 : LBrkt thf_let_types_list RBrkt { $$ = N(thf_let_types, $1, $2, $3); }
-| thf_atom_typing                        { $$ = N(thf_let_types, $1); }
+| thf_atom_typing                { $$ = N(thf_let_types, $1); }
 ;
 
 thf_let_types_list
@@ -535,7 +535,7 @@ thf_conn_term
 
 thf_atom_typing
 : untyped_atom Colon thf_top_level_type { $$ = N(thf_atom_typing, $1, $2, $3); }
-| LParen thf_atom_typing RParen   { $$ = N(thf_atom_typing, $1, $2, $3); }
+| LParen thf_atom_typing RParen         { $$ = N(thf_atom_typing, $1, $2, $3); }
 ;
 
 thf_top_level_type
@@ -597,7 +597,7 @@ thf_subtype
 
 thf_sequent
 : thf_tuple Gentzen_arrow thf_tuple { $$ = N(thf_sequent, $1, $2, $3); }
-| LParen thf_sequent RParen   { $$ = N(thf_sequent, $1, $2, $3); }
+| LParen thf_sequent RParen         { $$ = N(thf_sequent, $1, $2, $3); }
 
 // %----New material for modal logic semantics, not integrated yet
 // <logic_defn_rule>      :== <logic_defn_LHS> <assignment> <logic_defn_RHS>
