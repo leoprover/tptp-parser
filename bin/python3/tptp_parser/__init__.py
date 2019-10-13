@@ -11,10 +11,9 @@ def traverse(node, filter=None):
 def tree(node, filter=None, prefix=''):
     if filter:
         if node.rule == filter:
-            tree(node)
-        else:
-            for n in node:
-                tree(n, filter=filter)
+            tree(node)    
+        for n in node:
+            tree(n, filter=filter)
         return
 
     if prefix:
