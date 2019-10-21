@@ -1,6 +1,6 @@
 # A fast, portable TPTP parser
 A TPTP parser written in C++ using the bison/flex parser generator. The parser supports native bindings for Python, Java and Scala using swig.
-> :information_source: __Note:__ *Early version. In the current state, the parser can only parse THF. Their exists only a python3.7 binding - a distutil setup will be implemented next.
+> :information_source: __Note:__ *Early version. In the current state, the parser can only parse THF. Also their exists only a echo binary and a python3.7 binding.
 
 ## Setup
 ### install dependencies
@@ -12,8 +12,7 @@ A TPTP parser written in C++ using the bison/flex parser generator. The parser s
 $ ./generate-parser.sh
 ```
 
-Generate the parser to ```./tptp-parser/``` from the grammar defined in ```tptp.ll``` and ```tptp.yy``` using ```flex/bison```. 
-Additionally, builds a test parser executable ```./tptp-parser/tptp```.
+Generates the parser for various targets (python3, binary, ..) to different folders in ```./bin/``` using the parser and lexer defined in ```tptp-parser/*```. 
 
 ## Testrun
 ### cpp
