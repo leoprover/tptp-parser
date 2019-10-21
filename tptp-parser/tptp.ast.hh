@@ -36,20 +36,17 @@ MAKE_ENUM(nodetype,
     annotated_formula,
     thf_annotated, tff_annotated, tcf_annotated, fof_annotated, cnf_annotated, tpi_annotated,
     thf_formula, tff_formula, tcf_formula, fof_formula, cnf_formula, tpi_formula,
-    // thf
     thf_logic_formula, thf_binary_formula, thf_unit_formula, thf_preunit_formula, thf_unitary_formula, thf_apply_formula,
     thf_quantified_formula, thf_quantification, thf_variable_list, thf_typed_variable, 
-    /*thf_unary_formula,*/ thf_prefix_unary, /*thf_infix_unary,*/ thf_atomic_formula, thf_plain_atomic, 
-    thf_defined_atomic, /*thf_defined_infix,*/ thf_system_atomic, 
+    thf_prefix_unary, thf_atomic_formula, thf_plain_atomic, 
+    thf_defined_atomic, thf_system_atomic, 
     thf_conditional, thf_unitary_term, thf_let, thf_let_types, thf_let_types_list, 
     thf_let_defn, thf_let_defns, thf_let_defns_list, thf_tuple, thf_formula_list, thf_conn_term,
     thf_top_level_type, thf_atom_typing, thf_binary_type, thf_mapping_type, thf_xprod_type, thf_union_type, thf_subtype, thf_sequent,
     thf_unitary_type, thf_apply_type,
-    // quantifier
     thf_quantifier, th1_quantifier, th0_quantifier, fof_quantifier,
     thf_unary_connective, th1_unary_connective, unary_connective, nonassoc_connective, assoc_connective,
-    // general 
-    atom, untyped_atom, /*defined_infix_pred,*/
+    atom, untyped_atom, 
     constant, functor, system_constant, system_functor, defined_constant, defined_functor, defined_term, variable,
     source, optional_info, useful_info,
     include, formula_selection, name_list,
@@ -58,6 +55,23 @@ MAKE_ENUM(nodetype,
     atomic_defined_word, atomic_system_word, number, file_name,
     atomic_word, single_quoted, distinct_object
 );
+
+enum class structuretype{
+    none,
+    OPERATOR,            /* c1 IND c2 */
+    SEQUENCE,            /* c1 c2 c3 .. */
+    SEPERATED_SEQUENCE,  /* c1 PLC c2 PLC c3 .. */
+    LIST,                /* PLC c1 PLC c2 PLC c3 .. PLC */
+    NAMED_LIST,          /* IND PLC c1 PLC c2 PLC c3 .. PLC */
+    SINGLE,              /* c1 */
+    ANNONTATED,          /* IND c1 PLC c2 PLC c3 optional PLC */
+    ANNONTATED_OPTION,   /* PLC c1 c2 */ 
+    PREFIX,              /* IND c1 */
+    SUFFIX,              /* c1 INC */
+    BINDER,              /* IND PLC c1 PLC PLC */
+    BRACKET,             /* PLC c1 c2 c3 .. PLC */
+    NAMED_BRACKET        /* INC PLC c1 c2 c3 .. PLC */
+};
 
 class StopNodeIterator {};
 
@@ -78,15 +92,15 @@ public:
     // list initializer, to be able to write
     // node n1 = node(name, {c1, c2, c3})
     // node(nodetype, std::initializer_list<node>);
-    node(nodetype);
-    node(nodetype, node&&);
-    node(nodetype, node&&, node&&);
-    node(nodetype, node&&, node&&, node&&);
-    node(nodetype, node&&, node&&, node&&, node&&);
-    node(nodetype, node&&, node&&, node&&, node&&, node&&);
-    node(nodetype, node&&, node&&, node&&, node&&, node&&, node&&);
-    node(nodetype, node&&, node&&, node&&, node&&, node&&, node&&, node&&);
-    node(nodetype, node&&, node&&, node&&, node&&, node&&, node&&, node&&, node&&);
+    node(nodetype, structuretype);
+    node(nodetype, structuretype, node&&);
+    node(nodetype, structuretype, node&&, node&&);
+    node(nodetype, structuretype, node&&, node&&, node&&);
+    node(nodetype, structuretype, node&&, node&&, node&&, node&&);
+    node(nodetype, structuretype, node&&, node&&, node&&, node&&, node&&);
+    node(nodetype, structuretype, node&&, node&&, node&&, node&&, node&&, node&&);
+    node(nodetype, structuretype, node&&, node&&, node&&, node&&, node&&, node&&, node&&);
+    node(nodetype, structuretype, node&&, node&&, node&&, node&&, node&&, node&&, node&&, node&&);
 
     // add a child as the leftmost child, return the node itself for method-chaining
     node& add_left(node&&);
@@ -107,6 +121,7 @@ public:
 
     bool isTerminal();
 
+    structuretype structure = structuretype::none;
     nodetype type = nodetype::none;
     std::string value;
     int numChildren;

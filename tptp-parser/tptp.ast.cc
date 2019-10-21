@@ -50,38 +50,44 @@ node::node(std::string&& _value) {
     this->numChildren = 0;
 }
 
-node::node(nodetype _rule) {
+node::node(nodetype _rule, structuretype _structure) {
     this->type = _rule;
+    this->structure = _structure;
     this->numChildren = 0;
 }
-node::node(nodetype _rule, node&& c1) {
+node::node(nodetype _rule, structuretype _structure, node&& c1) {
     this->type = _rule;
+    this->structure = _structure;
     this->cright.push_back(c1);
     this->numChildren = 1;
 }
-node::node(nodetype _rule, node&& c1, node&& c2) {
+node::node(nodetype _rule, structuretype _structure, node&& c1, node&& c2) {
     this->type = _rule;
+    this->structure = _structure;
     this->cright.push_back(c1);
     this->cright.push_back(c2);
     this->numChildren = 2;
 }
-node::node(nodetype _rule, node&& c1, node&& c2, node&& c3) {
+node::node(nodetype _rule, structuretype _structure, node&& c1, node&& c2, node&& c3) {
     this->type = _rule;
+    this->structure = _structure;
     this->cright.push_back(c1);
     this->cright.push_back(c2);
     this->cright.push_back(c3);
     this->numChildren = 3;
 }
-node::node(nodetype _rule, node&& c1, node&& c2, node&& c3, node&& c4) {
+node::node(nodetype _rule, structuretype _structure, node&& c1, node&& c2, node&& c3, node&& c4) {
     this->type = _rule;
+    this->structure = _structure;
     this->cright.push_back(c1);
     this->cright.push_back(c2);
     this->cright.push_back(c3);
     this->cright.push_back(c4);
     this->numChildren = 4;
 }
-node::node(nodetype _rule, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5) {
+node::node(nodetype _rule, structuretype _structure, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5) {
     this->type = _rule;
+    this->structure = _structure;
     this->cright.push_back(c1);
     this->cright.push_back(c2);
     this->cright.push_back(c3);
@@ -89,8 +95,9 @@ node::node(nodetype _rule, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5
     this->cright.push_back(c5);
     this->numChildren = 5;
 }
-node::node(nodetype _rule, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5, node&& c6) {
+node::node(nodetype _rule, structuretype _structure, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5, node&& c6) {
     this->type = _rule;
+    this->structure = _structure;
     this->cright.push_back(c1);
     this->cright.push_back(c2);
     this->cright.push_back(c3);
@@ -99,8 +106,9 @@ node::node(nodetype _rule, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5
     this->cright.push_back(c6);
     this->numChildren = 6;
 }
-node::node(nodetype _rule, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5, node&& c6, node&& c7) {
+node::node(nodetype _rule, structuretype _structure, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5, node&& c6, node&& c7) {
     this->type = _rule;
+    this->structure = _structure;
     this->cright.push_back(c1);
     this->cright.push_back(c2);
     this->cright.push_back(c3);
@@ -110,8 +118,9 @@ node::node(nodetype _rule, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5
     this->cright.push_back(c7);
     this->numChildren = 7;
 }
-node::node(nodetype _rule, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5, node&& c6, node&& c7, node&& c8) {
+node::node(nodetype _rule, structuretype _structure, node&& c1, node&& c2, node&& c3, node&& c4, node&& c5, node&& c6, node&& c7, node&& c8) {
     this->type = _rule;
+    this->structure = _structure;
     this->cright.push_back(c1);
     this->cright.push_back(c2);
     this->cright.push_back(c3);

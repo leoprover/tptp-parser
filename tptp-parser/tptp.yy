@@ -40,7 +40,7 @@
     // $$ = N(IDENTIFIER, $1, $2);
     //   -> 
     // $$ = ast::node(ast::IDENTIFIER, $1, $2);
-    #define N(t, ...) ast::node(ast::nodetype::t __VA_OPT__(,) __VA_ARGS__ )
+    #define N(s, t, ...) ast::node(ast::nodetype::t, ast::structuretype::s __VA_OPT__(,) __VA_ARGS__ )
 }
 
 // DEVELOPMENT NOTE:
@@ -172,15 +172,15 @@ root
 // TODO: introduce eps
 TPTP_file 
 : TPTP_input TPTP_file { $$ = std::move($2.add_left($1)); }
-| TPTP_input           { $$ = N(TPTP_file, $1); }
+| TPTP_input           { $$ = N(SEQUENCE, TPTP_file, $1); }
 ;
 TPTP_input
-: annotated_formula { $$ = N(TPTP_input, $1); }
-| include           { $$ = N(TPTP_input, $1); }
+: annotated_formula { $$ = N(SINGLE, TPTP_input, $1); }
+| include           { $$ = N(SINGLE, TPTP_input, $1); }
 ;
 
 annotated_formula
-: thf_annotated { $$ = N(annotated_formula, $1); }
+: thf_annotated { $$ = N(SINGLE, annotated_formula, $1); }
 //| tff_annotated { $$ = N(annotated_formula, $1); }
 //| tcf_annotated { $$ = N(annotated_formula, $1); }
 //| fof_annotated { $$ = N(annotated_formula, $1); }
@@ -189,11 +189,11 @@ annotated_formula
 ;
 
 thf_annotated
-: DefinitionTHF name Comma formula_role Comma thf_formula annotations DefinitionEnd { $$ = N(thf_annotated, $1, $2, $3, $4, $5, $6, $7, $8); }
+: DefinitionTHF name Comma formula_role Comma thf_formula annotations DefinitionEnd { $$ = N(ANNONTATED, thf_annotated, $1, $2, $3, $4, $5, $6, $7, $8); }
 ;
 
 annotations
-: Comma source optional_info { $$ = N(annotations, $1, $2, $3); }
+: Comma source optional_info { $$ = N(ANNONTATED_OPTION, annotations, $1, $2, $3); }
 | %empty {}
 ;
 
@@ -211,7 +211,7 @@ annotations
 //                            negated_conjecture | plain | type |
 //                            fi_domain | fi_functors | fi_predicates | unknown
 formula_role
-: Lower_word { $$ = N(formula_role, $1); }
+: Lower_word { $$ = N(SINGLE, formula_role, $1); }
 ;
 
 // %----"axiom"s are accepted, without proof. There is no guarantee that the
@@ -261,10 +261,10 @@ formula_role
 // <thf_apply_formula>    ::= <thf_unit_formula> @ <thf_unit_formula> |
 //                            <thf_apply_formula> @ <thf_unit_formula>
 thf_formula
-: thf_logic_formula { $$ = N(thf_formula, $1); }
-| thf_atom_typing   { $$ = N(thf_formula, $1); }
-| thf_subtype       { $$ = N(thf_formula, $1); }
-| thf_sequent       { $$ = N(thf_formula, $1); }
+: thf_logic_formula { $$ = N(SINGLE, thf_formula, $1); }
+| thf_atom_typing   { $$ = N(SINGLE, thf_formula, $1); }
+| thf_subtype       { $$ = N(SINGLE, thf_formula, $1); }
+| thf_sequent       { $$ = N(SINGLE, thf_formula, $1); }
 ;
 
 thf_logic_formula
@@ -275,11 +275,11 @@ thf_logic_formula
 // solved by removing "thf_unary_formula" and replacing it with "thf_prefix_unary"
 // 
 //| thf_unary_formula   { $$ = N(thf_logic_formula, $1); }
-: thf_prefix_unary    { $$ = N(thf_logic_formula, $1); }
+: thf_prefix_unary    { $$ = N(SINGLE, thf_logic_formula, $1); }
 // @solved shift/reduce conflict
 // removed thf_unitary_formula since its a subrule of our new thf_binary_formula
 //| thf_unitary_formula { $$ = N(thf_logic_formula, $1); }
-| thf_binary_formula  { $$ = N(thf_logic_formula, $1); }
+| thf_binary_formula  { $$ = N(SINGLE, thf_logic_formula, $1); }
 // @solved shift/reduce conflict
 // "thf_defined_infix  := .. defined_infix_pred .."
 // "defined_infix_pred := Infix_equality"
@@ -291,20 +291,20 @@ thf_logic_formula
 // @speedup
 // merged "thf_or_formula, thf_and_formula, thf_app_formula, thf_binary_pair, thf_binary_tuple" to "thf_binary_formula"
 thf_binary_formula
-: thf_binary_formula App              thf_binary_formula { $$ = N(thf_binary_formula, $1, $2, $3); }
-| thf_binary_formula Assignment       thf_binary_formula { $$ = N(thf_binary_formula, $1, $2, $3); }
-| thf_binary_formula Infix_equality   thf_binary_formula { $$ = N(thf_binary_formula, $1, $2, $3); }
-| thf_binary_formula Infix_inequality thf_binary_formula { $$ = N(thf_binary_formula, $1, $2, $3); }
-| thf_binary_formula And              thf_binary_formula { $$ = N(thf_binary_formula, $1, $2, $3); }
-| thf_binary_formula Or               thf_binary_formula { $$ = N(thf_binary_formula, $1, $2, $3); }
-| thf_binary_formula Nand             thf_binary_formula { $$ = N(thf_binary_formula, $1, $2, $3); }
-| thf_binary_formula Nor              thf_binary_formula { $$ = N(thf_binary_formula, $1, $2, $3); }
-| thf_binary_formula Impl             thf_binary_formula { $$ = N(thf_binary_formula, $1, $2, $3); }
-| thf_binary_formula If               thf_binary_formula { $$ = N(thf_binary_formula, $1, $2, $3); }
-| thf_binary_formula Iff              thf_binary_formula { $$ = N(thf_binary_formula, $1, $2, $3); }
-| thf_binary_formula Niff             thf_binary_formula { $$ = N(thf_binary_formula, $1, $2, $3); }
-| thf_unitary_formula                                    { $$ = N(thf_binary_formula, $1); }
-| thf_binary_type                                        { $$ = N(thf_binary_formula, $1); }
+: thf_binary_formula App              thf_binary_formula { $$ = N(OPERATOR, thf_binary_formula, $1, $2, $3); }
+| thf_binary_formula Assignment       thf_binary_formula { $$ = N(OPERATOR, thf_binary_formula, $1, $2, $3); }
+| thf_binary_formula Infix_equality   thf_binary_formula { $$ = N(OPERATOR, thf_binary_formula, $1, $2, $3); }
+| thf_binary_formula Infix_inequality thf_binary_formula { $$ = N(OPERATOR, thf_binary_formula, $1, $2, $3); }
+| thf_binary_formula And              thf_binary_formula { $$ = N(OPERATOR, thf_binary_formula, $1, $2, $3); }
+| thf_binary_formula Or               thf_binary_formula { $$ = N(OPERATOR, thf_binary_formula, $1, $2, $3); }
+| thf_binary_formula Nand             thf_binary_formula { $$ = N(OPERATOR, thf_binary_formula, $1, $2, $3); }
+| thf_binary_formula Nor              thf_binary_formula { $$ = N(OPERATOR, thf_binary_formula, $1, $2, $3); }
+| thf_binary_formula Impl             thf_binary_formula { $$ = N(OPERATOR, thf_binary_formula, $1, $2, $3); }
+| thf_binary_formula If               thf_binary_formula { $$ = N(OPERATOR, thf_binary_formula, $1, $2, $3); }
+| thf_binary_formula Iff              thf_binary_formula { $$ = N(OPERATOR, thf_binary_formula, $1, $2, $3); }
+| thf_binary_formula Niff             thf_binary_formula { $$ = N(OPERATOR, thf_binary_formula, $1, $2, $3); }
+| thf_unitary_formula                                    { $$ = N(OPERATOR, thf_binary_formula, $1); }
+| thf_binary_type                                        { $$ = N(OPERATOR, thf_binary_formula, $1); }
 ;
 
 // <thf_unit_formula>     ::= <thf_unitary_formula> | <thf_unary_formula> |
@@ -313,7 +313,7 @@ thf_binary_formula
 // <thf_unitary_formula>  ::= <thf_quantified_formula> | <thf_atomic_formula> | 
 //                            <variable> | (<thf_logic_formula>)
 thf_unit_formula
-: thf_unitary_formula { $$ = N(thf_unit_formula, $1); }
+: thf_unitary_formula { $$ = N(SINGLE, thf_unit_formula, $1); }
 // @solved shift/reduce conflict
 // "thf_unary_formula  := thf_prefix_unary | thf_infix_unary"
 // "thf_infix_unary    := thf_unitary_term Infix_inequality thf_unitary_term"
@@ -321,28 +321,28 @@ thf_unit_formula
 // "defined_infix_pred := Infix_equality"
 //| thf_unary_formula   { $$ = N(thf_unit_formula, $1); }
 //| thf_defined_infix   { $$ = N(thf_unit_formula, $1); }
-| thf_prefix_unary { $$ = N(thf_unit_formula, $1); }
-| thf_unitary_term Infix_equality thf_unitary_term   { $$ = N(thf_unit_formula, $1, $2, $3); }
-| thf_unitary_term Infix_inequality thf_unitary_term { $$ = N(thf_unit_formula, $1, $2, $3); }
+| thf_prefix_unary { $$ = N(SINGLE, thf_unit_formula, $1); }
+| thf_unitary_term Infix_equality thf_unitary_term   { $$ = N(OPERATOR, thf_unit_formula, $1, $2, $3); }
+| thf_unitary_term Infix_inequality thf_unitary_term { $$ = N(OPERATOR, thf_unit_formula, $1, $2, $3); }
 ;
 
 thf_preunit_formula
-: thf_unitary_formula thf_prefix_unary { $$ = N(thf_preunit_formula, $1, $2); }
+: thf_unitary_formula thf_prefix_unary { $$ = N(SUFFIX, thf_preunit_formula, $1, $2); }
 ;
 
 thf_unitary_formula
-: thf_quantified_formula { $$ = N(thf_unitary_formula, $1); }
+: thf_quantified_formula { $$ = N(SINGLE, thf_unitary_formula, $1); }
 // @solved reduce/reduce conflict
 // used thf_unitary_term instead of the following rules since the rules are a subset of thf_unitary_formula
-| thf_unitary_term { $$ = N(thf_unitary_formula, $1); }
+| thf_unitary_term { $$ = N(SINGLE, thf_unitary_formula, $1); }
 //| thf_atomic_formula { $$ = N(thf_atomic_formula, $1); }
 //| variable { $$ = N(thf_unitary_formula, $1); }
 //| LParen thf_logic_formula RParen { $$ = N(thf_unitary_formula, $1); }
 ;
 
 thf_apply_formula
-: thf_apply_formula App thf_unit_formula { $$ = N(thf_apply_formula, $1, $2, $3); }
-| thf_unit_formula App thf_unit_formula  { $$ = N(thf_apply_formula, $1, $2, $3); }
+: thf_apply_formula App thf_unit_formula { $$ = N(OPERATOR, thf_apply_formula, $1, $2, $3); }
+| thf_unit_formula App thf_unit_formula  { $$ = N(OPERATOR, thf_apply_formula, $1, $2, $3); }
 ;
 
 // %----All variables must be quantified
@@ -370,26 +370,26 @@ thf_apply_formula
 //                            <defined_functor>(<thf_arguments>) |
 //                            <system_functor>(<thf_arguments>)
 thf_quantified_formula
-: thf_quantification thf_unit_formula { N(thf_quantified_formula, $1, $2); }
+: thf_quantification thf_unit_formula { N(PREFIX, thf_quantified_formula, $1, $2); }
 ;
 
 thf_quantification
-: thf_quantifier LBrkt thf_variable_list RBrkt Colon { N(thf_quantification, $1, $2, $3, $4, $5); }
+: thf_quantifier LBrkt thf_variable_list RBrkt Colon { N(BINDER, thf_quantification, $1, $2, $3, $4, $5); }
 ;
 
 // allow an empty list but not "," or ",x" and such
 // equivalent to "thf_variable_list?", "[thf_variable_list]" or "thf_typed_variable*"
 thf_variable_list
 : thf_variable_list__HELPER0 { $$ = std::move($1); }
-| %empty                     { $$ = N(thf_variable_list); }
+| %empty                     { $$ = N(SEPERATED_SEQUENCE, thf_variable_list); }
 ;
 thf_variable_list__HELPER0
 : thf_typed_variable Comma thf_variable_list__HELPER0 { $$ = std::move($3.add_left($1)); }
-| thf_typed_variable                                  { $$ = N(thf_variable_list, $1); }
+| thf_typed_variable                                  { $$ = N(SEPERATED_SEQUENCE, thf_variable_list, $1); }
 ;
 
 thf_typed_variable
-: variable Colon thf_top_level_type { $$ = N(thf_typed_variable, $1, $2, $3); }
+: variable Colon thf_top_level_type { $$ = N(OPERATOR, thf_typed_variable, $1, $2, $3); }
 ;
 
 // @removed by solving ambigulty
@@ -399,8 +399,8 @@ thf_typed_variable
 //;
 
 thf_prefix_unary
-: thf_unary_connective { $$ = N(thf_prefix_unary, $1); }
-| thf_preunit_formula  { $$ = N(thf_prefix_unary, $1); }
+: thf_unary_connective { $$ = N(SINGLE, thf_prefix_unary, $1); }
+| thf_preunit_formula  { $$ = N(SINGLE, thf_prefix_unary, $1); }
 ;
 
 // @removed by solving ambigulty
@@ -409,23 +409,23 @@ thf_prefix_unary
 //;
 
 thf_atomic_formula
-: thf_plain_atomic   { $$ = N(thf_atomic_formula, $1); }
-| thf_defined_atomic { $$ = N(thf_atomic_formula, $1); }
-| thf_system_atomic  { $$ = N(thf_atomic_formula, $1); }
+: thf_plain_atomic   { $$ = N(SINGLE, thf_atomic_formula, $1); }
+| thf_defined_atomic { $$ = N(SINGLE, thf_atomic_formula, $1); }
+| thf_system_atomic  { $$ = N(SINGLE, thf_atomic_formula, $1); }
 //| thf_fof_function   { $$ = N(thf_atomic_formula, $1); }
 ;
 
 thf_plain_atomic
-: constant  { $$ = N(thf_plain_atomic, $1); }
-| thf_tuple { $$ = N(thf_plain_atomic, $1); }
+: constant  { $$ = N(SINGLE, thf_plain_atomic, $1); }
+| thf_tuple { $$ = N(SINGLE, thf_plain_atomic, $1); }
 ;
 
 thf_defined_atomic
-: defined_constant { $$ = N(thf_defined_atomic, $1); }
-| thf_conditional  { $$ = N(thf_defined_atomic, $1); }
-| thf_let          { $$ = N(thf_defined_atomic, $1); }
-| defined_term     { $$ = N(thf_defined_atomic, $1); }
-| LCurly thf_conn_term RCurly { $$ = N(thf_defined_atomic, $1, $2, $3); }
+: defined_constant { $$ = N(SINGLE, thf_defined_atomic, $1); }
+| thf_conditional  { $$ = N(SINGLE, thf_defined_atomic, $1); }
+| thf_let          { $$ = N(SINGLE, thf_defined_atomic, $1); }
+| defined_term     { $$ = N(SINGLE, thf_defined_atomic, $1); }
+| LCurly thf_conn_term RCurly { $$ = N(BRACKET, thf_defined_atomic, $1, $2, $3); }
 ;
 
 // @removed by solving ambigulty
@@ -434,7 +434,7 @@ thf_defined_atomic
 //;
 
 thf_system_atomic
-: system_constant { $$ = N(thf_system_atomic, $1); }
+: system_constant { $$ = N(SINGLE, thf_system_atomic, $1); }
 ;
 
 // <thf_conditional>      ::= $ite(<thf_logic_formula>,<thf_logic_formula>,
@@ -459,57 +459,57 @@ thf_system_atomic
 // %----allowed, i.e., only (= @ p). 
 
 thf_conditional
-: Dollar_ite LParen thf_logic_formula Comma thf_logic_formula Comma thf_logic_formula RParen { $$ = N(thf_conditional, $1, $2, $3, $4, $5, $6, $7, $8); }
+: Dollar_ite LParen thf_logic_formula Comma thf_logic_formula Comma thf_logic_formula RParen { $$ = N(NAMED_LIST, thf_conditional, $1, $2, $3, $4, $5, $6, $7, $8); }
 ;
 
 thf_let
-: Dollar_let LParen thf_let_types Comma thf_let_defns Comma thf_formula RParen { $$ = N(thf_let, $1, $2, $3, $4, $5, $6, $7, $8); }
+: Dollar_let LParen thf_let_types Comma thf_let_defns Comma thf_formula RParen { $$ = N(NAMED_LIST, thf_let, $1, $2, $3, $4, $5, $6, $7, $8); }
 ;
 
 thf_let_types
-: LBrkt thf_let_types_list RBrkt { $$ = N(thf_let_types, $1, $2, $3); }
-| thf_atom_typing                { $$ = N(thf_let_types, $1); }
+: LBrkt thf_let_types_list RBrkt { $$ = N(BRACKET, thf_let_types, $1, $2, $3); }
+| thf_atom_typing                { $$ = N(SINGLE, thf_let_types, $1); }
 ;
 
 thf_let_types_list
 : thf_atom_typing Comma thf_let_types { $$ = std::move($3.add_left($1)); }
-| thf_atom_typing                     { $$ = N(thf_let_types_list, $1); }
+| thf_atom_typing                     { $$ = N(SEPERATED_SEQUENCE, thf_let_types_list, $1); }
 ;
 
 thf_let_defns
-: LBrkt thf_let_defns_list RBrkt { $$ = N(thf_let_defns, $1, $2, $3); }
-| thf_let_defn                           { $$ = N(thf_let_defns, $1); }
+: LBrkt thf_let_defns_list RBrkt { $$ = N(BRACKET, thf_let_defns, $1, $2, $3); }
+| thf_let_defn                   { $$ = N(SINGLE, thf_let_defns, $1); }
 ;
 
 thf_let_defns_list
 : thf_let_defn Comma thf_let_defns { $$ = std::move($3.add_left($1)); }
-| thf_let_defn                     { $$ = N(thf_let_defns_list, $1); }
+| thf_let_defn                     { $$ = N(SEPERATED_SEQUENCE, thf_let_defns_list, $1); }
 ;
 
 thf_let_defn
-: thf_logic_formula Assignment thf_logic_formula { $$ = N(thf_let_defn, $1, $2, $3); }
+: thf_logic_formula Assignment thf_logic_formula { $$ = N(OPERATOR, thf_let_defn, $1, $2, $3); }
 ; 
 
 thf_unitary_term
-: thf_atomic_formula { $$ = N(thf_unitary_term, $1); }
-| variable           { $$ = N(thf_unitary_term, $1); }
-| LParen thf_logic_formula RParen { $$ = N(thf_unitary_term, $1, $2, $3); }
+: thf_atomic_formula { $$ = N(SINGLE, thf_unitary_term, $1); }
+| variable           { $$ = N(SINGLE, thf_unitary_term, $1); }
+| LParen thf_logic_formula RParen { $$ = N(BRACKET, thf_unitary_term, $1, $2, $3); }
 ;
 
 thf_tuple
-: LBrkt RBrkt                  { $$ = N(thf_tuple, $1, $2); }
-| LBrkt thf_formula_list RBrkt { $$ = N(thf_tuple, $1, $2, $3); }
+: LBrkt RBrkt                  { $$ = N(BRACKET, thf_tuple, $1, $2); }
+| LBrkt thf_formula_list RBrkt { $$ = N(BRACKET, thf_tuple, $1, $2, $3); }
 
 thf_formula_list
 : thf_logic_formula Comma thf_formula_list { $$ = std::move($3.add_left($1)); }
-| thf_logic_formula                        { $$ = N(thf_formula_list, $1); }
+| thf_logic_formula                        { $$ = N(SEPERATED_SEQUENCE, thf_formula_list, $1); }
 ;
 
 thf_conn_term
-: nonassoc_connective  { $$ = N(thf_conn_term, $1); }
-| assoc_connective     { $$ = N(thf_conn_term, $1); }
-| Infix_equality       { $$ = N(thf_conn_term, $1); }
-| thf_unary_connective { $$ = N(thf_conn_term, $1); }
+: nonassoc_connective  { $$ = N(SINGLE, thf_conn_term, $1); }
+| assoc_connective     { $$ = N(SINGLE, thf_conn_term, $1); }
+| Infix_equality       { $$ = N(SINGLE, thf_conn_term, $1); }
+| thf_unary_connective { $$ = N(SINGLE, thf_conn_term, $1); }
 ;
 
 // %----Arguments recurse back up to formulae (this is the THF world here)
@@ -534,18 +534,18 @@ thf_conn_term
 // <th1_quantified_type>  :== !> [<thf_variable_list>] : <thf_unitary_type>
 
 thf_atom_typing
-: untyped_atom Colon thf_top_level_type { $$ = N(thf_atom_typing, $1, $2, $3); }
-| LParen thf_atom_typing RParen         { $$ = N(thf_atom_typing, $1, $2, $3); }
+: untyped_atom Colon thf_top_level_type { $$ = N(OPERATOR, thf_atom_typing, $1, $2, $3); }
+| LParen thf_atom_typing RParen         { $$ = N(BRACKET, thf_atom_typing, $1, $2, $3); }
 ;
 
 thf_top_level_type
-: thf_unitary_type { $$ = N(thf_top_level_type, $1); }
-| thf_mapping_type { $$ = N(thf_top_level_type, $1); }
-| thf_apply_type   { $$ = N(thf_top_level_type, $1); }
+: thf_unitary_type { $$ = N(SINGLE, thf_top_level_type, $1); }
+| thf_mapping_type { $$ = N(SINGLE, thf_top_level_type, $1); }
+| thf_apply_type   { $$ = N(SINGLE, thf_top_level_type, $1); }
 ;
 
 thf_unitary_type
-: thf_unitary_formula { $$ = N(thf_unitary_type, $1); }
+: thf_unitary_formula { $$ = N(SINGLE, thf_unitary_type, $1); }
 ;
 
 // <thf_apply_type>       ::= <thf_apply_formula>
@@ -567,37 +567,37 @@ thf_unitary_type
 // <thf_sequent>          ::= <thf_tuple> <gentzen_arrow> <thf_tuple> |
 //                            (<thf_sequent>)
 thf_apply_type
-: thf_apply_formula { $$ = N(thf_apply_type, $1); }
+: thf_apply_formula { $$ = N(SINGLE, thf_apply_type, $1); }
 ;
 
 thf_binary_type
-: thf_mapping_type { $$ = N(thf_binary_type, $1); }
-| thf_xprod_type   { $$ = N(thf_binary_type, $1); }
-| thf_union_type   { $$ = N(thf_binary_type, $1); }
+: thf_mapping_type { $$ = N(SINGLE, thf_binary_type, $1); }
+| thf_xprod_type   { $$ = N(SINGLE, thf_binary_type, $1); }
+| thf_union_type   { $$ = N(SINGLE, thf_binary_type, $1); }
 ;
 
 thf_mapping_type
-: thf_unitary_type Arrow thf_unitary_type { $$ = N(thf_mapping_type, $1, $2, $3); }
-| thf_unitary_type Arrow thf_mapping_type { $$ = N(thf_mapping_type, $1, $2, $3); }
+: thf_unitary_type Arrow thf_unitary_type { $$ = N(OPERATOR, thf_mapping_type, $1, $2, $3); }
+| thf_unitary_type Arrow thf_mapping_type { $$ = N(OPERATOR, thf_mapping_type, $1, $2, $3); }
 ;
 
 thf_xprod_type
-: thf_unitary_type Star thf_unitary_type { $$ = N(thf_xprod_type, $1, $2, $3); }
-| thf_xprod_type Star thf_unitary_type   { $$ = N(thf_xprod_type, $1, $2, $3); }
+: thf_unitary_type Star thf_unitary_type { $$ = N(OPERATOR, thf_xprod_type, $1, $2, $3); }
+| thf_xprod_type Star thf_unitary_type   { $$ = N(OPERATOR, thf_xprod_type, $1, $2, $3); }
 ;
 
 thf_union_type
-: thf_unitary_type Plus thf_unitary_type { $$ = N(thf_union_type, $1, $2, $3); }
-| thf_union_type Plus thf_unitary_type   { $$ = N(thf_union_type, $1, $2, $3); }
+: thf_unitary_type Plus thf_unitary_type { $$ = N(OPERATOR, thf_union_type, $1, $2, $3); }
+| thf_union_type Plus thf_unitary_type   { $$ = N(OPERATOR, thf_union_type, $1, $2, $3); }
 ;
 
 thf_subtype
-: untyped_atom Subtype_sign atom { $$ = N(thf_subtype, $1, $2, $3); }
+: untyped_atom Subtype_sign atom { $$ = N(OPERATOR, thf_subtype, $1, $2, $3); }
 ;
 
 thf_sequent
-: thf_tuple Gentzen_arrow thf_tuple { $$ = N(thf_sequent, $1, $2, $3); }
-| LParen thf_sequent RParen         { $$ = N(thf_sequent, $1, $2, $3); }
+: thf_tuple Gentzen_arrow thf_tuple { $$ = N(OPERATOR, thf_sequent, $1, $2, $3); }
+| LParen thf_sequent RParen         { $$ = N(BRACKET, thf_sequent, $1, $2, $3); }
 
 // %----New material for modal logic semantics, not integrated yet
 // <logic_defn_rule>      :== <logic_defn_LHS> <assignment> <logic_defn_RHS>
@@ -828,56 +828,56 @@ thf_sequent
 // <gentzen_arrow>        ::= -->
 // <assignment>           ::= :=
 thf_quantifier
-: fof_quantifier { $$ = N(thf_quantifier, $1); }
-| th0_quantifier { $$ = N(thf_quantifier, $1); }
-| th1_quantifier { $$ = N(thf_quantifier, $1); }
+: fof_quantifier { $$ = N(SINGLE, thf_quantifier, $1); }
+| th0_quantifier { $$ = N(SINGLE, thf_quantifier, $1); }
+| th1_quantifier { $$ = N(SINGLE, thf_quantifier, $1); }
 ;
 
 th1_quantifier
-: TyForall { $$ = N(th1_quantifier, $1); }
-| TyExists { $$ = N(th1_quantifier, $1); }
+: TyForall { $$ = N(SINGLE, th1_quantifier, $1); }
+| TyExists { $$ = N(SINGLE, th1_quantifier, $1); }
 ;
 
 th0_quantifier
-: Lambda      { $$ = N(th0_quantifier, $1); }
-| Choice      { $$ = N(th0_quantifier, $1); }
-| Description { $$ = N(th0_quantifier, $1); }
+: Lambda      { $$ = N(SINGLE, th0_quantifier, $1); }
+| Choice      { $$ = N(SINGLE, th0_quantifier, $1); }
+| Description { $$ = N(SINGLE, th0_quantifier, $1); }
 ;
 
 thf_unary_connective
-: unary_connective     { $$ = N(thf_unary_connective, $1); }
-| th1_unary_connective { $$ = N(thf_unary_connective, $1); }
+: unary_connective     { $$ = N(SINGLE, thf_unary_connective, $1); }
+| th1_unary_connective { $$ = N(SINGLE, thf_unary_connective, $1); }
 ; 
 
 th1_unary_connective
-: ForallComb      { $$ = N(th1_unary_connective, $1); }
-| ExistsComb      { $$ = N(th1_unary_connective, $1); }
-| ChoiceComb      { $$ = N(th1_unary_connective, $1); }
-| DescriptionComb { $$ = N(th1_unary_connective, $1); }
-| EqComb          { $$ = N(th1_unary_connective, $1); }
+: ForallComb      { $$ = N(SINGLE, th1_unary_connective, $1); }
+| ExistsComb      { $$ = N(SINGLE, th1_unary_connective, $1); }
+| ChoiceComb      { $$ = N(SINGLE, th1_unary_connective, $1); }
+| DescriptionComb { $$ = N(SINGLE, th1_unary_connective, $1); }
+| EqComb          { $$ = N(SINGLE, th1_unary_connective, $1); }
 ;
 
 fof_quantifier
-: Forall { $$ = N(fof_quantifier, $1); }
-| Exists { $$ = N(fof_quantifier, $1); }
+: Forall { $$ = N(SINGLE, fof_quantifier, $1); }
+| Exists { $$ = N(SINGLE, fof_quantifier, $1); }
 ;
 
 nonassoc_connective
-: Iff  { $$ = N(nonassoc_connective, $1); }
-| Impl { $$ = N(nonassoc_connective, $1); }
-| If   { $$ = N(nonassoc_connective, $1); }
-| Niff { $$ = N(nonassoc_connective, $1); }
-| Nor  { $$ = N(nonassoc_connective, $1); }
-| Nand { $$ = N(nonassoc_connective, $1); }
+: Iff  { $$ = N(SINGLE, nonassoc_connective, $1); }
+| Impl { $$ = N(SINGLE, nonassoc_connective, $1); }
+| If   { $$ = N(SINGLE, nonassoc_connective, $1); }
+| Niff { $$ = N(SINGLE, nonassoc_connective, $1); }
+| Nor  { $$ = N(SINGLE, nonassoc_connective, $1); }
+| Nand { $$ = N(SINGLE, nonassoc_connective, $1); }
 ;
 
 assoc_connective
-: Or  { $$ = N(assoc_connective, $1); }
-| And { $$ = N(assoc_connective, $1); }
+: Or  { $$ = N(SINGLE, assoc_connective, $1); }
+| And { $$ = N(SINGLE, assoc_connective, $1); }
 ;
 
 unary_connective
-: Not { $$ = N(unary_connective, $1); }
+: Not { $$ = N(SINGLE, unary_connective, $1); }
 ;
 
 // %----Types for THF and TFF
@@ -916,13 +916,13 @@ unary_connective
 // <infix_equality>       ::= =
 // <infix_inequality>     ::= !=
 atom
-: untyped_atom     { $$ = N(atom, $1); }
-| defined_constant { $$ = N(atom, $1); }
+: untyped_atom     { $$ = N(SINGLE, atom, $1); }
+| defined_constant { $$ = N(SINGLE, atom, $1); }
 ;
 
 untyped_atom
-: constant        { $$ = N(untyped_atom, $1); }
-| system_constant { $$ = N(untyped_atom, $1); }
+: constant        { $$ = N(SINGLE, untyped_atom, $1); }
+| system_constant { $$ = N(SINGLE, untyped_atom, $1); }
 ;
 
 // @removed by solving ambigulty
@@ -944,36 +944,36 @@ untyped_atom
 // <defined_term>         ::= <number> | <distinct_object>
 // <variable>             ::= <upper_word>
 constant
-: functor { $$ = N(constant, $1); }
+: functor { $$ = N(SINGLE, constant, $1); }
 ; 
 
 functor
-: atomic_word { $$ = N(functor, $1); }
+: atomic_word { $$ = N(SINGLE, functor, $1); }
 ; 
 
 system_constant
-: system_functor { $$ = N(system_constant, $1); }
+: system_functor { $$ = N(SINGLE, system_constant, $1); }
 ;
 
 system_functor
-: atomic_system_word { $$ = N(system_functor, $1); }
+: atomic_system_word { $$ = N(SINGLE, system_functor, $1); }
 ;
 
 defined_constant
-: defined_functor { $$ = N(defined_constant, $1); }
+: defined_functor { $$ = N(SINGLE, defined_constant, $1); }
 ;
 
 defined_functor
-: atomic_defined_word { $$ = N(defined_functor, $1); }
+: atomic_defined_word { $$ = N(SINGLE, defined_functor, $1); }
 ;
 
 defined_term
-: number          { $$ = N(defined_term, $1); }
-| distinct_object { $$ = N(defined_term, $1); }
+: number          { $$ = N(SINGLE, defined_term, $1); }
+| distinct_object { $$ = N(SINGLE, defined_term, $1); }
 ;
 
 variable 
-: Upper_word { $$ = N(variable, $1); }
+: Upper_word { $$ = N(SINGLE, variable, $1); }
 ;
 
 // %------------------------------------------------------------------------------
@@ -1015,7 +1015,7 @@ variable
 // <creator_source>       :== creator(<creator_name><optional_info>)
 // <creator_name>         :== <atomic_word>
 source
-: general_term { $$ = N(source, $1); }
+: general_term { $$ = N(SINGLE, source, $1); }
 
 // %----Useful info fields
 // <optional_info>        ::= ,<useful_info> | <null>
@@ -1074,25 +1074,25 @@ source
 // <formula_selection>    ::= ,[<name_list>] | <null>
 // <name_list>            ::= <name> | <name>,<name_list>
 optional_info
-: Comma useful_info { $$ = N(optional_info, $1, $2); }
+: Comma useful_info { $$ = N(PREFIX, optional_info, $1, $2); }
 ;
 
 useful_info
-: general_list { $$ = N(useful_info, $1); }
+: general_list { $$ = N(SINGLE, useful_info, $1); }
 ;
 
 include
-: DefinitionInclude file_name formula_selection DefinitionEnd { $$ = N(include, $1, $2, $3, $4); }
+: DefinitionInclude file_name formula_selection DefinitionEnd { $$ = N(BRACKET, include, $1, $2, $3, $4); }
 ;
 
 formula_selection
-: Comma LBrkt name_list RBrkt { $$ = N(formula_selection, $1, $2, $3, $4); }
+: Comma LBrkt name_list RBrkt { $$ = N(BRACKET, formula_selection, $1, $2, $3, $4); }
 | %empty {}
 ;
 
 name_list
-: name                 { $$ = N(name_list, $1); }
-| name Comma name_list { $$ = N(name_list, $1, $2, $3); }
+: name                 { $$ = N(SINGLE, name_list, $1); }
+| name Comma name_list { $$ = N(OPERATOR, name_list, $1, $2, $3); }
 ;
 
 // %----Non-logical data
@@ -1111,25 +1111,25 @@ name_list
 // <general_list>         ::= [] | [<general_terms>]
 // <general_terms>        ::= <general_term> | <general_term>,<general_terms>
 general_term
-: general_data                    { $$ = N(general_term, $1); }
-| general_list                    { $$ = N(general_term, $1); }
-| general_data Colon general_term { $$ = N(general_term, $1, $2, $3); }
+: general_data                    { $$ = N(SINGLE, general_term, $1); }
+| general_list                    { $$ = N(SINGLE, general_term, $1); }
+| general_data Colon general_term { $$ = N(OPERATOR, general_term, $1, $2, $3); }
 ;
 
 general_function
-: atomic_word LParen general_terms RParen { $$ = N(general_function, $1, $2, $3, $4); }
+: atomic_word LParen general_terms RParen { $$ = N(NAMED_BRACKET, general_function, $1, $2, $3, $4); }
 
 general_data
-: atomic_word      { $$ = N(general_data, $1); }
-| general_function { $$ = N(general_data, $1); }
-| variable         { $$ = N(general_data, $1); }
-| number           { $$ = N(general_data, $1); }
-| distinct_object  { $$ = N(general_data, $1); }
-| formula_data     { $$ = N(general_data, $1); }
+: atomic_word      { $$ = N(SINGLE, general_data, $1); }
+| general_function { $$ = N(SINGLE, general_data, $1); }
+| variable         { $$ = N(SINGLE, general_data, $1); }
+| number           { $$ = N(SINGLE, general_data, $1); }
+| distinct_object  { $$ = N(SINGLE, general_data, $1); }
+| formula_data     { $$ = N(SINGLE, general_data, $1); }
 ;
 
 formula_data
-: Dollar_thf LParen thf_formula RParen   { $$ = N(formula_data, $1, $2, $3, $4); }
+: Dollar_thf LParen thf_formula RParen   { $$ = N(NAMED_BRACKET, formula_data, $1, $2, $3, $4); }
 //| Dollar_tff LParen tff_formula RParen { $$ = N(formula_data, $1, $2, $3, $4); }
 //| Dollar_fof LParen fof_formula RParen { $$ = N(formula_data, $1, $2, $3, $4); }
 //| Dollar_cnf LParen cnf_formula RParen { $$ = N(formula_data, $1, $2, $3, $4); }
@@ -1137,13 +1137,13 @@ formula_data
 ;
 
 general_list
-: LBrkt RBrkt               { $$ = N(general_list, $1, $2); }
-| LBrkt general_terms RBrkt { $$ = N(general_list, $1, $2, $3); }
+: LBrkt RBrkt               { $$ = N(BRACKET, general_list, $1, $2); }
+| LBrkt general_terms RBrkt { $$ = N(BRACKET, general_list, $1, $2, $3); }
 ;
 
 general_terms
 : general_term Comma general_terms { $$ = std::move($3.add_left($1)); }
-| general_term                     { $$ = N(general_terms, $1); }
+| general_term                     { $$ = N(SEPERATED_SEQUENCE, general_terms, $1); }
 ;
 
 // %----General purpose
@@ -1151,13 +1151,13 @@ general_terms
 // %----Integer names are expected to be unsigned
 // <atomic_word>          ::= <lower_word> | <single_quoted>
 name
-: atomic_word { $$ = N(name, $1);}
-| Integer     { $$ = N(name, $1); }
+: atomic_word { $$ = N(SINGLE, name, $1);}
+| Integer     { $$ = N(SINGLE, name, $1); }
 ;
 
 atomic_word
-: Lower_word    { $$ = N(atomic_word, $1);}
-| single_quoted { $$ = N(atomic_word, $1); }
+: Lower_word    { $$ = N(SINGLE, atomic_word, $1);}
+| single_quoted { $$ = N(SINGLE, atomic_word, $1); }
 ; 
 
 // %----<single_quoted> tokens do not include their outer quotes, therefore the
@@ -1189,21 +1189,21 @@ atomic_word
 // %----Operators:   ! ? ~ & | <=> => <= <~> ~| ~& * +
 // %----Predicates:  = != $true $false
 atomic_defined_word
-: Dollar_word { $$ = N(atomic_defined_word, $1); }
+: Dollar_word { $$ = N(SINGLE, atomic_defined_word, $1); }
 ;
 
 atomic_system_word
-: Dollar_dollar_word { $$ = N(atomic_system_word, $1); }
+: Dollar_dollar_word { $$ = N(SINGLE, atomic_system_word, $1); }
 ;
 
 number
-: Integer  { $$ = N(number, $1); }
-| Rational { $$ = N(number, $1); }
-| Real     { $$ = N(number, $1); }
+: Integer  { $$ = N(SINGLE, number, $1); }
+| Rational { $$ = N(SINGLE, number, $1); }
+| Real     { $$ = N(SINGLE, number, $1); }
 ;
 
 file_name
-: single_quoted { $$ = N(file_name, $1); }
+: single_quoted { $$ = N(SINGLE, file_name, $1); }
 ;
 
 // %----For lex/yacc there cannot be spaces on either side of the | here
@@ -1243,7 +1243,7 @@ file_name
 // %----The token does not include the outer quotes, e.g., 'cat' and cat are the
 // %----same. See <atomic_word> for information about stripping the quotes.
 single_quoted
-: Single_quote Sq_string Single_quote { $$ = N(single_quoted, $1, $2, $3); }
+: Single_quote Sq_string Single_quote { $$ = N(BRACKET, single_quoted, $1, $2, $3); }
 ;
 
 // <distinct_object>      ::- <double_quote><do_char>*<double_quote>
@@ -1255,7 +1255,7 @@ single_quoted
 // %----interpreted as themselves, so if they are different they are unequal,
 // %----e.g., "Apple" != "Microsoft" is implicit.
 distinct_object
-: Double_quote Do_string Double_quote { $$ = N(distinct_object, $1, $2, $3); }
+: Double_quote Do_string Double_quote { $$ = N(BRACKET, distinct_object, $1, $2, $3); }
 ;
 
 // <dollar_word>          ::- <dollar><lower_word>
