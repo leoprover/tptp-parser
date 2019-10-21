@@ -2,7 +2,6 @@
 This TPTP-parser is created using flex/bison and swig. The sources can be found at https://github.com/leoprover/tptp-parser.
 
 ## Testrun
-### python3
 ```$ python3 test_run.py PROBLEM_FILE```
 
 ## License
