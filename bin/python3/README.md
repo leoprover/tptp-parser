@@ -1,5 +1,5 @@
 # A fast TPTP-parser for Python3
-This TPTP-parser is created using flex/bison and swig. The sources can be found at {https://github.com/leoprover/tptp-parser}.
+This TPTP-parser is created using flex/bison and swig. The sources can be found at https://github.com/leoprover/tptp-parser.
 
 ## Testrun
 ### python3
