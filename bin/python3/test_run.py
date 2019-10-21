@@ -13,6 +13,15 @@ def main(argv):
     print('% to string:')
     print(ast)
 
+    time_afterast = time.time_ns()
+
+    print('{parse} parse[ms]'.format(
+        parse=int((time_afterparse-time_init)/1000000),
+    ))
+    print('{parse} parse+print[ms]'.format(
+        parse=int((time_afterast-time_init)/1000000),
+    ))
+
     print()
     print('% select specific child:')
     print(ast[0])
@@ -29,7 +38,7 @@ def main(argv):
 
     print()
     print('% filtered tree:')
-    tptp_parser.tree(ast, filter=tptp_parser.nodetype_thf_binary_formula)
+    tptp_parser.tree(ast, filter=tptp_parser.nodetype.thf_binary_formula)
 
     print()
     print('% inorder traversal:')
@@ -38,14 +47,15 @@ def main(argv):
 
     print()
     print('% inorder inorder with filter:')
-    for n in tptp_parser.traverse(ast, filter=tptp_parser.nodetype_thf_binary_formula):
+    for n in tptp_parser.traverse(ast, filter=tptp_parser.nodetype.thf_binary_formula):
         print(n, n.typeString())
 
-    time_afterast = time.time_ns()
-
-    print('{parse} parse[ms]'.format(
-        parse=int((time_afterast-time_init)/1000000),
-    ))
+    print()
+    print('% add stuff:')
+    for n in tptp_parser.traverse(ast, filter=tptp_parser.nodetype.thf_binary_formula):
+        n.addLeft(tptp_parser.node('*F'))
+        n.addRight(tptp_parser.node('*B'))
+    tptp_parser.tree(ast, filter=tptp_parser.nodetype.thf_binary_formula)
 
 if __name__ == '__main__':
     main(sys.argv)

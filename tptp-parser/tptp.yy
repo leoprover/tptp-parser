@@ -171,7 +171,7 @@ root
 
 // TODO: introduce eps
 TPTP_file 
-: TPTP_input TPTP_file { $$ = std::move($2.add_left($1)); }
+: TPTP_input TPTP_file { $$ = $2.addLeft($1); }
 | TPTP_input           { $$ = N(SEQUENCE, TPTP_file, $1); }
 ;
 TPTP_input
@@ -380,11 +380,11 @@ thf_quantification
 // allow an empty list but not "," or ",x" and such
 // equivalent to "thf_variable_list?", "[thf_variable_list]" or "thf_typed_variable*"
 thf_variable_list
-: thf_variable_list__HELPER0 { $$ = std::move($1); }
+: thf_variable_list__HELPER0 { $$ = $1; }
 | %empty                     { $$ = N(SEPERATED_SEQUENCE, thf_variable_list); }
 ;
 thf_variable_list__HELPER0
-: thf_typed_variable Comma thf_variable_list__HELPER0 { $$ = std::move($3.add_left($1)); }
+: thf_typed_variable Comma thf_variable_list__HELPER0 { $$ = $3.addLeft($2).addLeft($1); }
 | thf_typed_variable                                  { $$ = N(SEPERATED_SEQUENCE, thf_variable_list, $1); }
 ;
 
@@ -472,7 +472,7 @@ thf_let_types
 ;
 
 thf_let_types_list
-: thf_atom_typing Comma thf_let_types { $$ = std::move($3.add_left($1)); }
+: thf_atom_typing Comma thf_let_types { $$ = $3.addLeft($2).addLeft($1); }
 | thf_atom_typing                     { $$ = N(SEPERATED_SEQUENCE, thf_let_types_list, $1); }
 ;
 
@@ -482,7 +482,7 @@ thf_let_defns
 ;
 
 thf_let_defns_list
-: thf_let_defn Comma thf_let_defns { $$ = std::move($3.add_left($1)); }
+: thf_let_defn Comma thf_let_defns { $$ = $3.addLeft($2).addLeft($1); }
 | thf_let_defn                     { $$ = N(SEPERATED_SEQUENCE, thf_let_defns_list, $1); }
 ;
 
@@ -501,7 +501,7 @@ thf_tuple
 | LBrkt thf_formula_list RBrkt { $$ = N(BRACKET, thf_tuple, $1, $2, $3); }
 
 thf_formula_list
-: thf_logic_formula Comma thf_formula_list { $$ = std::move($3.add_left($1)); }
+: thf_logic_formula Comma thf_formula_list { $$ = $3.addLeft($2).addLeft($1); }
 | thf_logic_formula                        { $$ = N(SEPERATED_SEQUENCE, thf_formula_list, $1); }
 ;
 
@@ -1142,7 +1142,7 @@ general_list
 ;
 
 general_terms
-: general_term Comma general_terms { $$ = std::move($3.add_left($1)); }
+: general_term Comma general_terms { $$ = $3.addLeft($2).addLeft($1); }
 | general_term                     { $$ = N(SEPERATED_SEQUENCE, general_terms, $1); }
 ;
 

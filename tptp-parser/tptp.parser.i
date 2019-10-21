@@ -33,7 +33,8 @@
 %ignore tptp::ast::node::structure;
 
 %rename(__str__) tptp::ast::node::toString;
-%rename(__getitem__) tptp::ast::node::child;
+%rename(__getitem__) tptp::ast::node::getChild;
+%rename(__setitem__) tptp::ast::node::setChild;
 
 // iterator support for python
 %exception {

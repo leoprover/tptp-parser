@@ -1,4 +1,5 @@
 from .tptp_parser import *
+from . import tptp_parser as _tptp_parser
 
 def traverse(node, filter=None):
     if filter is None or node.type == filter:
@@ -30,3 +31,12 @@ def tree(node, filter=None, prefix=''):
         for i in range(0,node.numChildren-1):
             tree(node[i], prefix=prefix+'│')
         tree(node[node.numChildren-1], prefix=prefix+' ')
+
+class Enum():
+    def __init__(self, prefix):
+        self.prefix = prefix
+
+    def __getattr__(self, key):
+        return getattr(_tptp_parser, self.prefix + '_' + key)
+
+nodetype = Enum('nodetype')

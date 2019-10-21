@@ -44,6 +44,12 @@ node::node() {
     this->numChildren = 0;
 }
 
+node::node(const char* _value) {
+    this->type = nodetype::terminal;
+    this->value = _value;
+    this->numChildren = 0;
+}
+
 node::node(std::string&& _value) {
     this->type = nodetype::terminal;
     this->value = _value;
@@ -136,22 +142,43 @@ bool node::isTerminal() {
     return this->type == nodetype::terminal;
 }
 
-node& node::add_left(node&& c) {
+node&& node::addLeft(node&& c) {
     this->cleft.push_back(c);
     this->numChildren++;
-    return *this;
+    return std::move(*this);
 }
-node& node::add_right(node&& c) {
+node&& node::addRight(node&& c) {
     this->cright.push_back(c);
     this->numChildren++;
-    return *this;
+    return std::move(*this);
 }
-node& node::child(int idx) {
-    int l = this->cleft.size();
+node&& node::setChild(int idx, node&& c) {
+    const int l = this->cleft.size();
     if(idx < l) {
-        return this->cleft[idx];
+        this->cleft[idx] = std::move(c);
     }
-    return this->cright[idx - l];
+    this->cright[idx - l] = std::move(c);
+
+    return std::move(*this);
+
+}
+node&& node::addChild(int idx, node&& c) {
+    const int l = this->cleft.size();
+    if(idx < l) {
+        this->cleft.insert(this->cleft.begin()+idx, std::move(c));
+    }
+    this->cright.insert(this->cright.begin()+idx-l, std::move(c));
+    this->numChildren++;
+    
+    return std::move(*this);
+
+}
+node&& node::getChild(int idx) {
+    const int l = this->cleft.size();
+    if(idx < l) {
+        return std::move(this->cleft[idx]);
+    }
+    return std::move(this->cright[idx - l]);
 }
 
 // iterator support for python

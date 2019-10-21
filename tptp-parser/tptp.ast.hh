@@ -79,6 +79,7 @@ class node
 {
 public:
     node();
+    node(const char*);
     node(std::string&&);
     
     // enforce default assigment operators to get compiler errors if we fuck up the member attributes of the class
@@ -102,12 +103,17 @@ public:
     node(nodetype, structuretype, node&&, node&&, node&&, node&&, node&&, node&&, node&&);
     node(nodetype, structuretype, node&&, node&&, node&&, node&&, node&&, node&&, node&&, node&&);
 
+    // all manipulation have move semantics, hence the object is manipulated and a point on the object is returned (for chaining).
     // add a child as the leftmost child, return the node itself for method-chaining
-    node& add_left(node&&);
+    node&& addLeft(node&&);
     // add a child as the rightmost child, return the node itself for method-chaining
-    node& add_right(node&&);
+    node&& addRight(node&&);
+    // set child at given index
+    node&& setChild(int, node&&);
+    // adds a new child at the given position, moves all children right of the newly inserted one to the right (increasing their index).
+    node&& addChild(int, node&&);
     // get child at given index
-    node& child(int);
+    node&& getChild(int);
 
     // iterator support for python
     node& __iter__();
