@@ -4,6 +4,7 @@
 %define api.value.type variant
 %define api.token.constructor
 %define api.value.automove
+%glr-parser
 %code requires
 {
     // This is a parser-grammar file for TPTP language Version 7.2.0.1 using the flex/bison 
@@ -389,7 +390,8 @@ thf_variable_list__HELPER0
 ;
 
 thf_typed_variable
-: variable Colon thf_top_level_type { $$ = N(OPERATOR, thf_typed_variable, $1, $2, $3); }
+: variable Colon thf_top_level_type        { $$ = N(OPERATOR, thf_typed_variable, $1, $2, $3); }
+| %?{ drv.optional_binder_types } variable { $$ = N(SINGLE, thf_typed_variable, $2); }
 ;
 
 // @removed by solving ambigulty
