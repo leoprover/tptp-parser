@@ -6,23 +6,46 @@
 
 using namespace tptp::ast;
 
+bool node::DEBUG_WITH_NESTING = false;
+bool node::DEBUG_WITH_TYPE = false;
+bool node::DEBUG_WITH_STRUCTURETYPE = false;
+
 std::ostream& node::out(std::ostream& o) const {
     int size = this->numChildren;
-    bool nested = size > 1;
-    nested = false;
+
+    bool with_nested = node::DEBUG_WITH_NESTING ? size > 1 : false;
+    bool with_type = node::DEBUG_WITH_TYPE;
+    bool with_structure = node::DEBUG_WITH_STRUCTURETYPE;
 
     for (std::reverse_iterator<std::vector<node>::const_iterator> it = this->cleft.rbegin() ; it != this->cleft.rend(); ++it) {
-        if(nested) o << "[";
+        if(with_nested) o << "[";
         o << *it;
-        if(nested) o << "]";
+        if(with_nested) o << "]";
     }
-    //o << " " << this->rule << " ";
+    
+    if (with_type | with_structure) 
+    {
+        o << "{";
+        if (with_type) o << this->type;
+        if (with_type & with_structure) o << ", ";
+        if (with_structure) o << this->structure;
+        o << "}";
+    }
     o << this->value;
+    
     for (std::vector<node>::const_iterator it = this->cright.begin() ; it != this->cright.end(); ++it) {
-        if(nested) o << "[";
+        if(with_nested) o << "[";
         o << *it;
-        if(nested) o << "]";
+        if(with_nested) o << "]";
     }
+
+    // add a newline after each definition or import
+    switch (this->type) {
+        case nodetype::include:
+        case nodetype::annotated_formula:
+            o << '\n';
+    }
+
     return o;
 };
 

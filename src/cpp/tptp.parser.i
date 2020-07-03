@@ -27,10 +27,14 @@
 //%ignore tptp::ast::node::add_left;      // we're immutable, ignore adding
 //%ignore tptp::ast::node::add_right;
 %ignore tptp::ast::node::out;                       // no ostream support    
-%ignore operator<<(std::ostream& o, const node& n); // no ostream support
+%ignore operator<<(std::ostream& o, const node& n); // no ostream support  
+%ignore operator<<(std::ostream& o, structuretype); // no ostream support
 
 %ignore tptp::ast::structuretype;
 %ignore tptp::ast::node::structure;
+%ignore tptp::ast::node::DEBUG_WITH_TYPE;
+%ignore tptp::ast::node::DEBUG_WITH_STRUCTURETYPE;
+%ignore tptp::ast::node::DEBUG_WITH_NESTING;
 
 %rename(__str__) tptp::ast::node::toString;
 %rename(__getitem__) tptp::ast::node::getChild;

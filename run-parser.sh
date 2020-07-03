@@ -2,4 +2,4 @@
 
 HERE=`dirname $0`
 
-bin/tptp $HERE/$1
+bin/tptp_parser $HERE/$1

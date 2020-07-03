@@ -4,7 +4,7 @@
 %define api.value.type variant
 %define api.token.constructor
 %define api.value.automove
-%glr-parser
+%glr-parser // allows %?{ drv.FLAG_TO_CHECK } notation to make parts of the parserules depend on flags or other conditions
 %code requires
 {
     // This is a parser-grammar file for TPTP language Version 7.2.0.1 using the flex/bison 
@@ -182,11 +182,11 @@ TPTP_input
 
 annotated_formula
 : thf_annotated { $$ = N(SINGLE, annotated_formula, $1); }
-//| tff_annotated { $$ = N(annotated_formula, $1); }
-//| tcf_annotated { $$ = N(annotated_formula, $1); }
-//| fof_annotated { $$ = N(annotated_formula, $1); }
-//| cnf_annotated { $$ = N(annotated_formula, $1); }
-//| tpi_annotated { $$ = N(annotated_formula, $1); }
+//| tff_annotated { $$ = N(SINGLE, annotated_formula, $1); }
+//| tcf_annotated { $$ = N(SINGLE, annotated_formula, $1); }
+//| fof_annotated { $$ = N(SINGLE, annotated_formula, $1); }
+//| cnf_annotated { $$ = N(SINGLE, annotated_formula, $1); }
+//| tpi_annotated { $$ = N(SINGLE, annotated_formula, $1); }
 ;
 
 thf_annotated
@@ -304,8 +304,8 @@ thf_binary_formula
 | thf_binary_formula If               thf_binary_formula { $$ = N(OPERATOR, thf_binary_formula, $1, $2, $3); }
 | thf_binary_formula Iff              thf_binary_formula { $$ = N(OPERATOR, thf_binary_formula, $1, $2, $3); }
 | thf_binary_formula Niff             thf_binary_formula { $$ = N(OPERATOR, thf_binary_formula, $1, $2, $3); }
-| thf_unitary_formula                                    { $$ = N(OPERATOR, thf_binary_formula, $1); }
-| thf_binary_type                                        { $$ = N(OPERATOR, thf_binary_formula, $1); }
+| thf_unitary_formula                                    { $$ = N(SINGLE, thf_binary_formula, $1); }
+| thf_binary_type                                        { $$ = N(SINGLE, thf_binary_formula, $1); }
 ;
 
 // <thf_unit_formula>     ::= <thf_unitary_formula> | <thf_unary_formula> |
@@ -394,7 +394,7 @@ thf_typed_variable
 | %?{ drv.optional_binder_types } variable { $$ = N(SINGLE, thf_typed_variable, $2); }
 ;
 
-// @removed by solving ambigulty
+// @removed by solving ambigulty in thf_logic_formula, thf_unit_formula
 //thf_unary_formula
 //: thf_prefix_unary { $$ = N(thf_unary_formula, $1); }
 //| thf_infix_unary  { $$ = N(thf_unary_formula, $1); }
@@ -405,7 +405,7 @@ thf_prefix_unary
 | thf_preunit_formula  { $$ = N(SINGLE, thf_prefix_unary, $1); }
 ;
 
-// @removed by solving ambigulty
+// @removed by solving ambigulty in thf_logic_formula, thf_unit_formula
 //thf_infix_unary
 //: thf_unitary_term Infix_inequality thf_unitary_term { $$ = N(thf_infix_unary, $1, $2, $3); }
 //;
@@ -430,7 +430,7 @@ thf_defined_atomic
 | LCurly thf_conn_term RCurly { $$ = N(BRACKET, thf_defined_atomic, $1, $2, $3); }
 ;
 
-// @removed by solving ambigulty
+// @removed by solving ambigulty in thf_logic_formula, thf_unit_formula
 //thf_defined_infix
 //: thf_unitary_term defined_infix_pred thf_unitary_term { $$ = N(thf_defined_infix, $1, $2, $3); }
 //;

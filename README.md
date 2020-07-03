@@ -7,14 +7,22 @@ A TPTP parser written in C++ using the bison/flex parser generator. The parser s
 * flex 
 * bison >= 3.2
 
-## Generate a tptp-parser
+## Generate a TPTP parser
 ```Shell
-$ ./generate-parser.sh
+$ ./build.sh
 ```
 
-Generates the parser for various targets (python3, binary, ..) to different folders in ```./bin/``` using the parser and lexer defined in ```tptp-parser/*```. 
+Generates the parser for various targets (binary, python3 for now) to different folders in ```./bin/``` using the parser and lexer defined in ```src/*```. 
 
 ## Testrun
+### check parser consistency
+makes a diff of the origial problem and the output of the parser (creating the parse tree and flatten it again)
+```$ ./test-parser.sh PROBLEM_FILE```
+
+### trim problem
+trims a problem file to its essential content. Removed whitespaces, newlines and comments. Adds exactly one newline after each import and definition (after each ").").
+```$ ./trim-problem.sh PROBLEM_FILE```
+
 ### cpp
 ```$ ./run-parser.sh PROBLEM_FILE```
 

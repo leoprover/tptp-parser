@@ -1,13 +1,3 @@
-# tptp-parser
-tptp-parser/location.hh
-tptp-parser/tptp.lexer.cc
-tptp-parser/tptp.grammar.hh
-tptp-parser/tptp.grammar.cc
-bin/tptp
-bin/python3/tptp_parser/*
-!bin/python3/tptp_parser/__init__.py
-!bin/python3/tptp_parser/__main__.py
-
 # c:
 *.o
 *.output
@@ -23,6 +13,7 @@ __pycache__/
 .Python
 env/
 build/
+bin/
 develop-eggs/
 dist/
 downloads/

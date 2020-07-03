@@ -73,11 +73,35 @@ enum class structuretype{
     NAMED_BRACKET        /* INC PLC c1 c2 c3 .. PLC */
 };
 
+inline std::ostream& operator<<(std::ostream& os, structuretype value) { 
+    switch (value) {
+        case structuretype::none: os << "None"; break;
+        case structuretype::OPERATOR: os << "OPERATOR"; break;
+        case structuretype::SEQUENCE: os << "SEQUENCE"; break;
+        case structuretype::SEPERATED_SEQUENCE: os << "SEPERATED_SEQUENCE"; break;
+        case structuretype::LIST: os << "LIST"; break;
+        case structuretype::NAMED_LIST: os << "NAMED_LIST"; break;
+        case structuretype::SINGLE: os << "SINGLE"; break;
+        case structuretype::ANNONTATED: os << "ANNONTATED"; break;
+        case structuretype::ANNONTATED_OPTION: os << "ANNONTATED_OPTION"; break;
+        case structuretype::PREFIX: os << "PREFIX"; break;
+        case structuretype::SUFFIX: os << "SUFFIX"; break;
+        case structuretype::BINDER: os << "BINDER"; break;
+        case structuretype::BRACKET: os << "BRACKET"; break;
+        case structuretype::NAMED_BRACKET: os << "NAMED_BRACKET"; break;
+    }
+    return os;
+};
+
 class StopNodeIterator {};
 
 class node
 {
 public:
+    static bool DEBUG_WITH_NESTING;
+    static bool DEBUG_WITH_TYPE;
+    static bool DEBUG_WITH_STRUCTURETYPE;
+
     node();
     node(const char*);
     node(std::string&&);
