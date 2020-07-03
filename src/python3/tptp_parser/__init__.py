@@ -32,11 +32,12 @@ def tree(node, filter=None, prefix=''):
             tree(node[i], prefix=prefix+'│')
         tree(node[node.numChildren-1], prefix=prefix+' ')
 
-class Enum():
+class ParserEnum():
     def __init__(self, prefix):
         self.prefix = prefix
 
     def __getattr__(self, key):
         return getattr(_tptp_parser, self.prefix + '_' + key)
 
-nodetype = Enum('nodetype')
+nodetype = ParserEnum('nodetype')
+structuretype = ParserEnum('structuretype')
