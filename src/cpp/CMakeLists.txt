@@ -17,7 +17,7 @@ set(TPTP_SOURCE_PYTHON ${CMAKE_CURRENT_SOURCE_DIR}/../python3/)
 
 ####
 # build BISON/FLEX parser
-find_package(BISON)
+find_package(BISON 3.2)
 find_package(FLEX)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
