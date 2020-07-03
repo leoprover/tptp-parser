@@ -32,9 +32,6 @@
 
 %ignore tptp::ast::structuretype;
 %ignore tptp::ast::node::structure;
-%ignore tptp::ast::node::DEBUG_WITH_TYPE;
-%ignore tptp::ast::node::DEBUG_WITH_STRUCTURETYPE;
-%ignore tptp::ast::node::DEBUG_WITH_NESTING;
 
 %rename(__str__) tptp::ast::node::toString;
 %rename(__getitem__) tptp::ast::node::getChild;
