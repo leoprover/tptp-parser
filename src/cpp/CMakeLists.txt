@@ -9,10 +9,14 @@
 project(TPTP_Parser)
 cmake_minimum_required(VERSION 3.16)
 
+####
+# Dir setup
 set(TPTP_BIN ${CMAKE_CURRENT_BINARY_DIR}/../bin/)
 set(TPTP_BIN_PYTHON ${CMAKE_CURRENT_BINARY_DIR}/../bin/python3/)
 set(TPTP_SOURCE_PYTHON ${CMAKE_CURRENT_SOURCE_DIR}/../python3/)
 
+####
+# build BISON/FLEX parser
 find_package(BISON)
 find_package(FLEX)
 
@@ -23,6 +27,8 @@ BISON_TARGET(BFParser tptp.yy ${CMAKE_CURRENT_BINARY_DIR}/tptp.grammar.cc)
 FLEX_TARGET(BFLexer tptp.ll ${CMAKE_CURRENT_BINARY_DIR}/tptp.lexer.cc)
 ADD_FLEX_BISON_DEPENDENCY(BFLexer BFParser)
 
+####
+# build executable
 add_executable(tptp_parser
     tptp.test.cc
     tptp.ast.hh tptp.parser.hh
@@ -31,11 +37,12 @@ add_executable(tptp_parser
     ${FLEX_BFLexer_OUTPUTS}
 )
 
-# setup swig for python bindings
+####
+# setup swig for python3 bindings
 find_package(SWIG)
 include(UseSWIG)
 
-# enforce python 3.7
+# load python3
 find_package(Python3 REQUIRED COMPONENTS Development)
 
 set_property(SOURCE tptp.parser.i PROPERTY CPLUSPLUS ON)
@@ -53,9 +60,10 @@ swig_add_library(tptp_parser_python
 
 set_property(TARGET tptp_parser_python PROPERTY SWIG_USE_TARGET_INCLUDE_DIRECTORIES ON)
 
-# enforce python 3.7
-target_link_libraries(tptp_parser_python Python3::Module) # link python 3
+# link python3 into the swig setup
+target_link_libraries(tptp_parser_python Python3::Module)
 
+####
 # copy final files to bin
 file(MAKE_DIRECTORY ${TPTP_BIN})
 add_custom_command(TARGET tptp_parser POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy tptp_parser ${TPTP_BIN})
