@@ -30,9 +30,6 @@
 %ignore operator<<(std::ostream& o, const node& n); // no ostream support  
 %ignore operator<<(std::ostream& o, structuretype); // no ostream support
 
-%ignore tptp::ast::structuretype;
-%ignore tptp::ast::node::structure;
-
 %rename(__str__) tptp::ast::node::toString;
 %rename(__getitem__) tptp::ast::node::getChild;
 %rename(__setitem__) tptp::ast::node::setChild;
