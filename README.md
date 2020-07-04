@@ -3,9 +3,14 @@ A TPTP parser written in C++ using the bison/flex parser generator. The parser s
 > :information_source: __Note:__ *Early version. In the current state, the parser can only parse THF. Also their exists only a echo binary and a python3.7 binding.
 
 ## Setup
-### install dependencies
-* flex 
+### build dependencies
+* cmake >= 3.16
 * bison >= 3.2
+* flex 
+
+#### to build the python3 version additionally
+* python >= 3.0
+* swig
 
 ## Generate a TPTP parser
 ```Shell
