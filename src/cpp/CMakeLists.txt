@@ -15,13 +15,13 @@ set(TPTP_BIN ${CMAKE_CURRENT_BINARY_DIR}/../bin/)
 set(TPTP_BIN_PYTHON ${CMAKE_CURRENT_BINARY_DIR}/../bin/python3/)
 set(TPTP_SOURCE_PYTHON ${CMAKE_CURRENT_SOURCE_DIR}/../python3/)
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 ####
 # build BISON/FLEX parser
 find_package(BISON 3.2)
 find_package(FLEX)
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 BISON_TARGET(BFParser tptp.yy ${CMAKE_CURRENT_BINARY_DIR}/tptp.grammar.cc)
 FLEX_TARGET(BFLexer tptp.ll ${CMAKE_CURRENT_BINARY_DIR}/tptp.lexer.cc)
@@ -39,11 +39,9 @@ add_executable(tptp_parser
 
 ####
 # setup swig for python3 bindings
+find_package(Python3 REQUIRED COMPONENTS Development)
 find_package(SWIG)
 include(UseSWIG)
-
-# load python3
-find_package(Python3 REQUIRED COMPONENTS Development)
 
 set_property(SOURCE tptp.parser.i PROPERTY CPLUSPLUS ON)
 set_property(SOURCE tptp.parser.i PROPERTY SWIG_MODULE_NAME tptp_parser)
