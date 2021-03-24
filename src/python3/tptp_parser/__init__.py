@@ -1,5 +1,5 @@
-from .tptp_parser import *
-from . import tptp_parser as _tptp_parser
+from tptp_parser import *
+import tptp_parser as _tptp_parser
 
 def traverse(node, filter=None):
     if filter is None or node.type == filter:
