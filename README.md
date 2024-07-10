@@ -1,4 +1,7 @@
-# A fast, portable TPTP parser
+# __This project is not maintained -- use at your own risk__
+
+
+## A fast, portable TPTP parser
 A TPTP parser written in C++ using the bison/flex parser generator. The parser supports native bindings for Python, Java and Scala using swig.
 > :information_source: __Note:__ *Early version. In the current state, the parser can only parse THF. Also their exists only a echo binary and a python3 binding.
 
